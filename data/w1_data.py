@@ -1,7 +1,7 @@
 import json
 import mysql.connector
 
-cnx = mysql.connector.connect(user="root", password="ABC123", host="127.0.0.1", database="taipei_day_trip")
+cnx = mysql.connector.connect(user="root", password="ji3cl31;4", host="127.0.0.1", database="taipei_day_trip")
 cursor = cnx.cursor()
 
 try:

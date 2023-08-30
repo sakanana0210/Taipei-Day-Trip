@@ -3,7 +3,7 @@ import mysql.connector
 import mysql.connector.pooling
 dbconfig = {
     "user": "root", 
-    "password": "ABC123", 
+    "password": "ji3cl31;4", 
     "host": "127.0.0.1", 
     "database": "taipei_day_trip",
     "charset": "utf8"
