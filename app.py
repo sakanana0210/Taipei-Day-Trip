@@ -43,11 +43,11 @@ def attractions():
 		cursor = cnx.cursor()
 		data = []
 		if keyword:
-			query = f"SELECT * FROM attractions WHERE mrt = '{keyword}' OR name LIKE '%{keyword}%' LIMIT {start_index}, 12;"
-			cursor.execute(query)
+			query = "SELECT * FROM attractions WHERE mrt = %s OR name LIKE %s LIMIT %s, 12;"
+			cursor.execute(query,(keyword, "%" + keyword + "%", start_index))
 			results = cursor.fetchall()
-			query_next = f"SELECT id FROM attractions WHERE mrt = '{keyword}' OR name LIKE '%{keyword}%' LIMIT {start_index + 12}, 1;"
-			cursor.execute(query_next)
+			query_next = "SELECT id FROM attractions WHERE mrt = %s OR name LIKE %s LIMIT %s, 1;"
+			cursor.execute(query_next,(keyword, "%" + keyword + "%", start_index + 12))
 			ifNext = cursor.fetchall()
 			if not results:
 				message = "超出查詢範圍，請重新查詢"
@@ -55,11 +55,11 @@ def attractions():
 			elif not ifNext:
 				nextpage = None
 		else:
-			query = f"SELECT * from attractions LIMIT {start_index}, 12;"
-			cursor.execute(query)
+			query = "SELECT * from attractions LIMIT %s, 12;"
+			cursor.execute(query, (start_index,))
 			results = cursor.fetchall()
-			query_next = f"SELECT id FROM attractions LIMIT {start_index + 12}, 1;"
-			cursor.execute(query_next)
+			query_next = "SELECT id FROM attractions LIMIT  %s, 1;"
+			cursor.execute(query_next, (start_index + 12,))
 			ifNext = cursor.fetchall()
 			if not results:
 				message = "超出查詢範圍，請重新查詢"
@@ -103,8 +103,8 @@ def attractions_id(attractionId):
 		message = "查詢錯誤，請重新查詢"
 		cnx = conn_pool.get_connection()
 		cursor = cnx.cursor()
-		query = f"SELECT * from attractions WHERE id = {attractionId};"
-		cursor.execute(query)
+		query = "SELECT * from attractions WHERE id = %s;"
+		cursor.execute(query, (attractionId,))
 		result = cursor.fetchone()
 		if not result:
 			message = "景點編號不正確，請重新查詢"
@@ -148,7 +148,7 @@ def mrts():
 		message = "查詢錯誤，請重新查詢"
 		cnx = conn_pool.get_connection()
 		cursor = cnx.cursor()
-		query = f"SELECT mrt, COUNT(*) as count FROM attractions GROUP BY mrt ORDER BY count DESC LIMIT 40"
+		query = "SELECT mrt, COUNT(*) as count FROM attractions GROUP BY mrt ORDER BY count DESC LIMIT 40"
 		cursor.execute(query)
 		results = cursor.fetchall()
 		data = []
