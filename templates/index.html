@@ -65,12 +65,11 @@
         let lists = document.querySelector(".lists");
         let listsContainer = document.querySelector(".lists-container");
         let scrollWidth = 0.8 * listsContainer.offsetWidth;
-        let maxWidth = scrollWidth * 3;
         let currentTransformX = 0;
         let newTransformX;
         buttonRight.addEventListener("click", () => {
             currentTransformX -= scrollWidth;
-            currentTransformX = Math.max(-maxWidth, currentTransformX);
+            currentTransformX = Math.max(-2250, currentTransformX);
             lists.style.transform = `translateX(${currentTransformX}px)`;
         });
         buttonLeft.addEventListener("click", () => {
@@ -78,7 +77,9 @@
             currentTransformX = Math.min(0, currentTransformX);
             lists.style.transform = `translateX(${currentTransformX}px)`;
         });
-
+        window.addEventListener("resize", () => {
+            scrollWidth = 0.8 * listsContainer.offsetWidth;
+        });
         function changeImage_left(button) {
             const img = button.querySelector("img");
             img.src = "../static/img/leftHovered.png";
