@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title>台北一日遊</title>
+    <link rel="stylesheet" href="../static/index.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    <header>
+        <div class="navbar-container">
+            <div class="navbar">
+                <h2>台北一日遊</h2>
+                <div class="navbar-lists">
+                    <button class="navbar-list" id="booking">預定行程</button>
+                    <button class="navbar-list" id="sign-up-in">登入/註冊</button>
+                </div>
+            </div>
+        </div>
+        <div class="welcome-container">
+            <div class="slogan-container">
+                <div class="slogan">
+                    <h1 id="slogan1">輕鬆享受台北一日悠閒</h1>
+                    <p id="slogan2">探索每個角落，體驗城市的深度旅遊行程</p>
+                </div>
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input class="search-input" type="text" placeholder="輸入景點名稱查詢">
+                        <button class="btn-search"><img id="icon-search" id="search-img" src="../static/img/icon_search.png" alt="查詢"></img></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="list-bar">
+            <div class="arrow-container">
+                <button class="btn-arrow-left" onmouseover="changeImage_left(this)" onmouseout="restoreImage_left(this)">
+                    <img id="img-arrow-left" src="../static/img/leftDefault.png" alt="←"></img>
+                </button>
+            </div>
+            <div class="lists-container">
+                <ul class="lists">
+                </ul>
+            </div>
+            <div class="arrow-container">
+                <button class="btn-arrow-right" onmouseover="changeImage_right(this)" onmouseout="restoreImage_right(this)">
+                    <img id="img-arrow-right" src="../static/img/rightDefault.png" alt="→"></img>
+                </button>
+            </div>
+        </div>
+        <div class="attractions">
+        </div>
+    </main>
+    <footer>
+        <p class="footer-text">COPYRIGHT © 2021 台北一日遊</p>
+    </footer>
+    <script>
+        const currentURL = window.location.href;
+
+        // Lists Scrool
+        let buttonRight = document.querySelector(".btn-arrow-right");
+        let buttonLeft = document.querySelector(".btn-arrow-left");
+        let lists = document.querySelector(".lists");
+        let listsContainer = document.querySelector(".lists-container");
+        let scrollWidth = 0.8 * listsContainer.offsetWidth;
+        let maxWidth = scrollWidth * 3;
+        let currentTransformX = 0;
+        let newTransformX;
+        buttonRight.addEventListener("click", () => {
+            currentTransformX -= scrollWidth;
+            currentTransformX = Math.max(-maxWidth, currentTransformX);
+            lists.style.transform = `translateX(${currentTransformX}px)`;
+        });
+        buttonLeft.addEventListener("click", () => {
+            currentTransformX += scrollWidth;
+            currentTransformX = Math.min(0, currentTransformX);
+            lists.style.transform = `translateX(${currentTransformX}px)`;
+        });
+
+        function changeImage_left(button) {
+            const img = button.querySelector("img");
+            img.src = "../static/img/leftHovered.png";
+        }
+        function restoreImage_left(button) {
+            const img = button.querySelector("img");
+            img.src = "../static/img/leftDefault.png";
+        }
+        function changeImage_right(button) {
+            const img = button.querySelector("img");
+            img.src = "../static/img/rightHovered.png";
+        }
+        function restoreImage_right(button) {
+            const img = button.querySelector("img");
+            img.src = "../static/img/rightDefault.png";
+        }
+        function createList(){
+            let url = currentURL + "api/mrts";
+            fetch(url)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                for (let i=0; i < data["data"].length; i++){
+                    let lists = document.querySelector(".lists");
+                    let list = document.createElement("li");
+                    list.textContent = data["data"][i];
+                    if(list.textContent !== ""){
+                        lists.appendChild(list);
+                    }
+                }
+            });
+        }
+        createList();
+
+        //Create Attraction Div
+        function createAttraction(page, query){
+            return new Promise((resolve, reject) => {
+            let url;
+            if(query) {
+                url= currentURL + "api/attractions?page=" + page + "&keyword=" + query;
+            } else {
+                url= currentURL + "api/attractions?page=" + page;
+            }
+            
+            fetch(url)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                for (let i=0; i < data["data"].length; i++){
+                    let attractions = document.querySelector(".attractions");
+                    let attraction = document.createElement("div");
+                    attraction.className = "attraction"; 
+                    attractions.appendChild(attraction);
+                    let imgContainer = document.createElement("div");
+                    imgContainer.className = "img-container"; 
+                    attraction.appendChild(imgContainer);
+                    let image = document.createElement("img");
+                    image.src = data["data"][i]["images"][0];
+                    imgContainer.appendChild(image);
+                    let name = document.createElement("p");
+                    name.textContent = data["data"][i]["name"];
+                    imgContainer.appendChild(name);
+                    let textContainer = document.createElement("div");
+                    textContainer.className = "text-container"; 
+                    attraction.appendChild(textContainer);
+                    let mrt =  document.createElement("p");
+                    mrt.textContent = data["data"][i]["mrt"];
+                    textContainer.appendChild(mrt);
+                    let category =  document.createElement("p");
+                    category.textContent = data["data"][i]["category"];
+                    textContainer.appendChild(category);
+                }
+                const result = { nextPage: data["nextPage"], query: query };
+                resolve(result);
+            })
+            .catch(error => {
+                reject(error);
+            });
+        });
+        }
+
+        //Infinite Scroll
+        let nextPage;
+        let count = 1;
+        let query;
+        createAttraction(0)
+        .then(result => {
+            nextPage = result.nextPage;
+            query = result.query;
+        })
+
+        const callback = (entries) => {
+            if (entries[0].isIntersecting  &&  nextPage && count === nextPage && !query) {
+                createAttraction(nextPage)
+                .then((result => {
+                    nextPage = result.nextPage;
+                    query = result.query;
+                }));
+                count += 1;
+            } else if (entries[0].isIntersecting  &&  nextPage && count === nextPage && query){
+                createAttraction(nextPage, query)
+                .then((result => {
+                    nextPage = result.nextPage;
+                    query = result.query;
+                }));
+                count += 1;
+            }
+        };
+        const options = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0,
+        };
+        const observer = new IntersectionObserver(callback, options);
+        let element = document.querySelector("footer");
+        observer.observe(element);
+        
+        //Keyword Search
+        let searchInput = document.querySelector(".search-input");
+        let submitButton = document.querySelector(".btn-search");
+        submitButton.addEventListener("click", function() {
+            nextPage = submitSearch();
+        });
+        searchInput.addEventListener("keydown", function(event) {
+            if (event.key === "Enter"){
+                nextPage = submitSearch();
+            }
+        });
+        function submitSearch() {
+            let querySearch = searchInput.value;
+            let url= currentURL + `api/attractions?page=0&keyword=${querySearch}`;
+            let attractions = document.querySelector(".attractions");
+            attractions.innerHTML="";
+            observer.unobserve(element);
+            createAttraction(0, querySearch)
+            .then(result => {
+                nextPage = result.nextPage;
+                query = result.query;
+                count = 1;
+            })
+            .then(() => {
+                observer.observe(element);
+            })
+            .catch(error => {
+                let attractions = document.querySelector(".attractions");
+                let attractionError = document.createElement("div");
+                attractionError.className = "attraction-error"; 
+                attractionError.textContent = "查無景點資料，請重新查詢。";
+                attractions.appendChild(attractionError);
+            });
+        }
+
+        let mrtList = document.querySelector(".lists");
+        mrtList.addEventListener("click", (event) => {
+            searchInput.value = event.target.textContent;
+            nextPage = submitSearch();
+        });
+    </script>
+</body>
+</html>
