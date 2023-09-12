@@ -490,14 +490,17 @@ input[type="date"].selected:before {
 }
 
 .infors > div > .infor-content {
-    display: flex;
+    display: block;
     align-items: center;
     font-size: 16px;
     font-weight: 400;
     color: #666666;
     line-height: 24px;
+    width: 100%;
+    white-space: wrap;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
 }
-
 
 @media (min-width: 1200px) {
     .navbar {
@@ -589,14 +592,13 @@ input[type="date"].selected:before {
         margin-bottom: 94px;
     }
 
-    
     .address, .traffic{
         margin-top: 20px;
     }
 }
 
 @media (max-width: 360px) {
-    header, main, footer {
+    header, main, footer, hr {
         width: 360px;
     }
 }
