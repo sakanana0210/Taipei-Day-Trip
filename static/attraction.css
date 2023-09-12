@@ -233,7 +233,7 @@ hr {
     font-size: 24px;
     font-weight: 700;
     color: #666666;
-    height: 33px;
+    height: auto;
 }
 
 .attraction-container > p {
