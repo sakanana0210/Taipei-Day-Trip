@@ -1,0 +1,138 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Noto Sans TC, sans-serif;
+}
+
+header {
+    display: block;
+}
+
+.navbar-container {
+    width: 100%;
+    height: 54px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    background-color: #ffffff;
+}
+
+.navbar {
+    max-width: 1200px;
+    width: 62.5%;
+    height: 34px;
+    top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar > h2 {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 34px;
+    color: #448899;
+    width: 150px;
+    height: 34px;
+    margin: 0;
+}
+
+.navbar-lists{
+    width: auto;
+    display: flex;
+}
+
+
+.btn-arrow-left{
+    padding: 9px 0px 9px 15px;
+}
+
+.btn-arrow-right{
+    padding: 9px 15px 9px 0px;
+}
+
+.navbar-list {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666666;
+    height: 34px;
+    padding: 10px;
+    width: auto;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+footer {
+    width: 100%;
+    height: 104px;
+    padding: 40px 0;  
+    background: #757575;
+    text-align: center;
+    display: flex;
+}
+
+.footer-text {
+    height: 24px;
+    margin: auto;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+main {
+    width: 100%;
+    height: auto;
+    padding: 40px 0px 40px 0px;
+}
+
+#hr-top {
+    margin-top: 54px;
+}
+
+hr {
+    border: 1px solid #E8E8E8;
+    width: 100vw;
+}
+
+@media (min-width: 600px){
+    .navbar {
+        width: 90%;
+    }
+}
+
+@media (min-width: 1000px){
+    .navbar {
+        width: 90%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar {
+        width: 1200px;
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        width: 100%;
+    }
+    .navbar > h2 {
+        margin-left: 10px;
+    }
+
+
+}
+
+@media (max-width: 360px) {
+    header, main, footer {
+        width: 360px;
+    }
+}

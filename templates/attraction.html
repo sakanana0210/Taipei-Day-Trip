@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title>台北一日遊</title>
+    <link rel="stylesheet" href="../static/attraction.css">
+</head>
+<body>
+    <header>
+        <div class="navbar-container">
+            <div class="navbar">
+                <h2 onclick="homePage()">台北一日遊</h2>
+                <div class="navbar-lists">
+                    <button class="navbar-list" id="booking">預定行程</button>
+                    <button class="navbar-list" id="sign-up-in">登入/註冊</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <hr id="hr-top">
+    <main>
+        <div class="main-seciton" id="row-top">
+            <div class="attraction-picture">
+                <div class="slides">
+                </div>
+                <div class="button-container-arrow">
+                    <button class="button-arrow" id="button-arrow-left"><img src="../static/img/btn_leftArrow.png" alt="←"></button>
+                    <button class="button-arrow" id="button-arrow-right"><img src="../static/img/btn_rightArrow.png" alt="→"></button>
+                </div>
+                <div class="button-container-pic">
+                </div>
+            </div>
+            <div class="attraction-profile">
+                <div class="attraction-container">
+                </div>
+                <form class="booking-form">
+                    <div class="booking-title"><p class="form-subtitle-1st">訂購導覽行程</p></div>
+                    <div class="booking-content"><p class="form-subtitle-content">以此景點為中心的一日行程，帶您探索城市角落故事</p></div>
+                    <div class="date">
+                        <span class="form-subtitle">選擇日期：</span>
+                        <div class="date-input-container">
+                            <input id="date-input" type="date" placeholder="yyyy/mm/dd">
+                        </div>
+                    </div>
+                    <div class="time">
+                        <span class="form-subtitle">選擇時間：</span>
+                        <div class="button-container">
+                            <input class="radio-button" id="morning-time" class="form-content" type="radio" name="day-time" checked>
+                            <label for="morning-time">上半天</label>
+                        </div>
+                        <div class="button-container">
+                            <input class="radio-button" id="afternoon-time" class="form-content" type="radio" name="day-time">
+                            <label for="afternoon-time">下半天</label>
+                        </div>
+                    </div>
+                    <div class ="price"><span class="form-subtitle">導覽費用：</span><span class="form-content" id="day-price">新台幣 2000 元</span></div>
+                    <button class ="btn-booking" type="submit">開始預約行程</button>
+                </form>
+            </div>
+        </div>
+        <hr>
+        <div class="main-seciton" id="row-bottom">
+            <div class="infors">
+                <div class="introduce-container">
+                </div>
+                <div class="address">
+                    <p class="infor-subtitle">景點地址：</p>
+                </div>
+                <div class="traffic">
+                    <p class="infor-subtitle">交通方式：</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p class="footer-text">COPYRIGHT © 2021 台北一日遊</p>
+    </footer>
+    <script>
+        // dateInput
+        function dateInput(){
+            let dateInput = document.getElementById("date-input");
+            dateInput.addEventListener("input", (e) => {
+                const inputDate = new Date(e.target.value);
+                if (inputDate.getTime()) {
+                    dateInput.classList.add("selected");
+                } else {
+                    dateInput.classList.remove("selected");
+                }
+            });
+        }
+        dateInput();
+        
+        // fetch attraction id
+        const currentURL = window.location.href;
+        let attractionId = currentURL.split("attraction/")[1];
+        url = "/api/attraction/" + attractionId;
+        fetch(url)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            let name = data["data"]["name"];
+            let category = data["data"]["category"];
+            let mrt = data["data"]["mrt"];
+            let images = data["data"]["images"];
+            let description = data["data"]["description"];
+            let address = data["data"]["address"];
+            let transport = data["data"]["transport"];
+
+            let container = document.querySelector(".attraction-container");
+            let attractionTitle = document.createElement("h3");
+            attractionTitle.textContent = name;
+            let attractionCategory = document.createElement("p");
+            attractionCategory.textContent = category + " at " + mrt;
+            container.appendChild(attractionTitle);
+            container.appendChild(attractionCategory);
+            
+            let introduceContainer = document.querySelector(".introduce-container");
+            let introduceP = document.createElement("p");
+            introduceP.textContent = description;
+            introduceP.className = "introduce";
+            introduceContainer.appendChild(introduceP);
+
+            let addressContainer = document.querySelector(".address");
+            let addressP = document.createElement("p");
+            addressP.textContent = address;
+            addressP.className = "infor-content";
+            addressContainer.appendChild(addressP);
+
+            let transportContainer = document.querySelector(".traffic");
+            let transportP = document.createElement("p");
+            transportP.textContent = transport;
+            transportP.className = "infor-content";
+            transportContainer.appendChild(transportP);
+
+            let slidesContainer = document.querySelector(".slides");
+            let length = images.length;
+            let slideButtonContainer = document.querySelector(".button-container-pic");
+            if (length >= 7) {
+                length = 7;
+            }
+            for (let i = 0; i < length; i++) {
+                let slideDiv = document.createElement("div");
+                slideDiv.className = "slide";
+                let imgElement = document.createElement("img");
+                imgElement.src = images[i];
+                slideDiv.appendChild(imgElement); 
+                if (i === 0) {
+                    slideDiv.classList.add("show");
+                }
+                slidesContainer.appendChild(slideDiv);
+                let buttonDiv = document.createElement("div");
+                buttonDiv.className = "button-div";
+                let buttonInput = document.createElement("input");
+                let buttonLabel = document.createElement("label");
+                buttonInput.type = "radio";
+                buttonInput.className = "button-circle";
+                buttonInput.name = "button-circle";
+                buttonInput.id = "pic" + [i];
+                buttonInput.value = [i];
+                buttonLabel.for = "pic" + [i];
+                if (i === 0) {
+                    buttonInput.checked = true;
+                }
+                slideButtonContainer.appendChild(buttonDiv);
+                let buttonDivSelect = document.querySelectorAll(".button-div");
+                buttonDivSelect[i].appendChild(buttonInput);
+                buttonDivSelect[i].appendChild(buttonLabel);
+            }
+        })
+        .then (() => {
+            // Slide Images
+            const radioButtons = document.querySelectorAll(".button-circle");
+            length = radioButtons.length;
+            let index = 0;
+            let slides = document.querySelectorAll(".slide");
+            radioButtons.forEach((radio) => {
+            radio.addEventListener("click", (event) => {
+                index = +event.target.value;
+                slides.forEach((element, slideIndex) => {
+                if (slideIndex === index) {
+                    element.classList.add("show");
+                } else {
+                    element.classList.remove("show");
+                }
+                });
+            });
+            });
+            const arrowLeft = document.getElementById("button-arrow-left");
+            const arrowRight = document.getElementById("button-arrow-right");
+            arrowLeft.addEventListener("click", () => {
+                index -= 1;
+                if(index < 0) {
+                    index = length - 1;
+                }
+                slides.forEach((element, slideIndex) => {
+                    if (slideIndex === index) {
+                        element.classList.add("show");
+                        radioButtons[index].checked = true;
+                    } else {
+                        element.classList.remove("show");
+                    }
+                });
+            })
+            arrowRight.addEventListener("click", () => {
+                index += 1;
+                if(index >= length) {
+                    index -= length;
+                }
+                slides.forEach((element, slideIndex) => {
+                    if (slideIndex === index) {
+                        element.classList.add("show");
+                        radioButtons[index].checked = true;
+                    } else {
+                        element.classList.remove("show");
+                    }
+                });
+            })
+
+            // Morning or Afternoon (2000 / 2500)
+            dayPrice = document.getElementById("day-price");
+            morningButton = document.getElementById("morning-time");
+            afternoonButton = document.getElementById("afternoon-time");
+            morningButton.addEventListener("click", (event) => {
+                if(event.target.checked){
+                    dayPrice.innerHTML="新台幣 2000 元";
+                }
+            })
+            afternoonButton.addEventListener("click", (event) => {
+                if(event.target.checked){
+                    dayPrice.innerHTML="新台幣 2500 元";
+                }
+            })
+        })
+        .catch(() => {
+            homePage();
+        });
+        
+        function homePage(){
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>

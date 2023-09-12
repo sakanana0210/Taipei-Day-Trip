@@ -1,0 +1,602 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Noto Sans TC, sans-serif;
+    color: #666666;
+}
+
+header {
+    display: block;
+    height: 54px;
+}
+
+.navbar-container {
+    width: 100%;
+    height: 54px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    background-color: #ffffff;
+}
+
+.navbar {
+    max-width: 1200px;
+    width: 62.5%;
+    height: 34px;
+    top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar > h2 {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 34px;
+    color: #448899;
+    width: 150px;
+    height: 34px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.navbar-lists{
+    width: auto;
+    display: flex;
+}
+
+.navbar-list {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666666;
+    height: 34px;
+    padding: 10px;
+    width: auto;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+footer {
+    width: 100%;
+    height: 104px;
+    padding: 40px 0;  
+    background: #757575;
+    text-align: center;
+    display: block;
+}
+
+.footer-text {
+    height: 24px;
+    margin: auto;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+main {
+    height: auto;
+    margin: 0px auto;
+}
+
+hr {
+    border: 1px solid #E8E8E8;
+    width: 100vw;
+}
+
+#hr-top{
+    position: fixed;
+    z-index: 98;
+}
+
+.main-seciton {
+    max-width: 1200px;
+    width: 90%;
+    margin: 40px auto;
+}
+
+#row-top {
+    display: flex;
+    height: 400px;
+}
+
+.attraction-picture {
+    margin: 0 15px;
+    width: 45%;
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    object-fit: cover;
+    position: relative;
+}
+
+.slides {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: block;
+}
+
+.slide {
+    width: 100%;
+    display: flex;
+    position: absolute;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.slide.show {
+    opacity: 1;
+}
+
+.attraction-picture img {
+    z-index: -99;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.button-container-arrow {
+    width: 100%;
+    position: absolute;
+    z-index: 10;
+    top: calc(50% - 18px);
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-arrow {
+    width: 36px;
+    height: 36px;
+    left: 10px;
+    background-color: transparent;
+    border: none;
+    opacity: 0.75;
+    z-index: 50;
+    cursor: pointer;
+}
+
+#button-arrow-left{
+    margin-left: 10px;
+}
+
+#button-arrow-right{
+    margin-right: 10px;
+}
+
+.button-container-pic {
+    position: absolute;
+    z-index: 10;
+    width: auto;
+    height: 12px;
+    opacity: 0.75;
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-container-pic > div {
+    width: 12px;
+    height: 12px;
+    display: flex;
+    margin: 0 6px;
+}
+
+.button-circle {
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    z-index: 50;
+    cursor: pointer;
+}
+
+.button-circle::before {
+    content: "";
+    width: 11px;
+    height: 11px;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.button-circle:checked::after {
+    content: "";
+    width: 11px;
+    height: 11px;
+    background-color: #000000;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.attraction-profile {
+    margin: 0 15px;
+    width: 50%;
+}
+
+.attraction-container > h3 {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #666666;
+    height: 33px;
+}
+
+.attraction-container > p {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666666;
+    height: 52px;
+    padding: 15px 0;
+}
+
+.booking-form {
+    height: 315px;
+    padding-top: 5px;
+    padding-bottom: 8px;
+    border-radius: 5px;
+    background-color: #E8E8E8;
+}
+
+.booking-title {
+    height: 22px;
+    display: flex;
+    align-items: center;
+}
+
+.booking-content {
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.form-subtitle {
+    font-size: 16px;
+    font-weight: 700;
+    margin: auto 0;
+    width: 81px;
+}
+
+.form-subtitle-1st {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    margin: auto 0;
+}
+
+.form-content {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.form-subtitle-content {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.date {
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+.date-input-container {
+    width: 193px;
+    height: 35px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+}
+
+#date-input {
+    width: 149px;
+    height: 25px;
+    margin: 5px 0 5px 10px;
+    border: none;
+    outline: none;
+}
+
+
+#date-input::placeholder {
+    font-size: 16px;
+    font-weight: 500;
+    color: #000000;
+}
+
+.date-input-container > label{
+    height: 24px;
+    width: 24px;
+    margin: 6px 10px 5px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#date-input {
+    width:193px;
+    height: 100%;
+    margin: 5px 10px;
+    border: none;
+    outline: none;
+    position: relative;
+    background-color: #fff;
+    text-align: start;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    width: 24px;
+    height: 35px;
+    background-image: url(../static/img/icon_calendar.png);
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: right center; 
+    right: -3px;
+    position: absolute;
+    cursor: pointer;
+    z-index: 99;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+    display: none;
+}
+
+input[type="date"].selected::-webkit-datetime-edit {
+    display: block;
+    margin-left: 0;
+}
+
+input[type="date"] {
+    font-size: 16px;
+    font-weight: 500;
+    color: #000000;
+    display: flex;
+}
+
+input[type="date"]:before {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    content: attr(placeholder);
+    position: absolute;
+}
+
+input[type="date"].selected:before {
+    content: "" !important;
+}
+
+
+
+.time {
+    height: 22px;
+    display: flex;
+    align-items: center;
+}
+
+.radio-button {
+    width: 22px;
+    height: 22px;
+    position: relative;
+    cursor: pointer;
+    border: none;
+}
+
+.radio-button::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background-color: #fff;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.radio-button:checked::after {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background-color: #448899;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.button-container {
+    width: 87px;
+    padding: 0px 8px 0px 5px;
+    margin-left: 5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.button-container > label {
+    width: 48px;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+.booking-form > div {
+    margin: auto 20px;
+    margin-top: 15px;
+}
+
+.price {
+    display: flex;
+    align-items: center;
+    height: 22px;
+}
+
+.btn-booking {
+    border:0;
+    background-color: #448899;
+    width: 154px;
+    height: 36px;
+    padding: 10px 20px 10px 20px;
+    border-radius: 5px;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 16px;
+    text-align: center;
+    color: #FFFFFF;
+    margin-top: 25px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.infors {
+    margin: 10px;
+}
+
+.infors > div > .infor-subtitle {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 700;
+    height: 32px;
+}
+
+.introduce {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 400;
+    color: #666666;
+    line-height: 24px;
+
+}
+
+.infors > div > .infor-content {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 400;
+    color: #666666;
+    line-height: 24px;
+}
+
+
+@media (min-width: 1200px) {
+    .navbar {
+        width: 1200px;
+    }
+    .main-seciton {
+        width: 1200px;
+    }
+    .form-content {
+        height: 24px;
+    }
+    .attraction-profile {
+        width: 600px;
+    }
+    .attraction-picture {
+        width: 540px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .navbar {
+        width: 90%;
+    }
+}
+
+
+@media (max-width: 930px){
+    
+    .attraction-picture {
+        width: 100%;
+        height: 380px;
+        object-fit: cover;
+        overflow: hidden;
+        margin: auto;
+    }
+    
+    .attraction-profile {
+        width: 100%;
+        margin: 20px auto 40px auto;
+    }
+
+    #row-top {
+        display: block;
+        height: auto;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .navbar {
+        width: 100%;
+    }
+
+    .navbar > h2 {
+        margin-left: 10px;
+    }
+
+    .main-seciton {
+        width: 100%;
+        margin: 0 auto;
+    }    
+    .attraction-picture {
+        width: 100%;
+        height: 350px;
+        margin: 0px;
+        border-radius: 0;
+    }
+    .attraction-profile {
+        width: calc(100% - 20px);
+        margin: 20px 10px 40px 10px;
+    }
+
+    #row-top {
+        display: block;
+        height: auto;
+    }
+
+    .booking-form {
+        height: 300px;
+        padding-top: 0px;
+        overflow: auto;
+    }
+
+    #row-bottom {
+        padding: 40px 10px 40px 10px;
+    }
+
+    .infors {
+        margin-bottom: 94px;
+    }
+
+    
+    .address, .traffic{
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 360px) {
+    header, main, footer {
+        width: 360px;
+    }
+}

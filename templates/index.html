@@ -11,7 +11,7 @@
     <header>
         <div class="navbar-container">
             <div class="navbar">
-                <h2>台北一日遊</h2>
+                <h2 onclick="homePage()">台北一日遊</h2>
                 <div class="navbar-lists">
                     <button class="navbar-list" id="booking">預定行程</button>
                     <button class="navbar-list" id="sign-up-in">登入/註冊</button>
@@ -64,21 +64,16 @@
         let buttonLeft = document.querySelector(".btn-arrow-left");
         let lists = document.querySelector(".lists");
         let listsContainer = document.querySelector(".lists-container");
-        let scrollWidth = 0.8 * listsContainer.offsetWidth;
-        let currentTransformX = 0;
-        let newTransformX;
+        let scrollWidth = 0.9 * listsContainer.offsetWidth;
+
         buttonRight.addEventListener("click", () => {
-            currentTransformX -= scrollWidth;
-            currentTransformX = Math.max(-2250, currentTransformX);
-            lists.style.transform = `translateX(${currentTransformX}px)`;
+            listsContainer.scrollLeft += scrollWidth;
         });
         buttonLeft.addEventListener("click", () => {
-            currentTransformX += scrollWidth;
-            currentTransformX = Math.min(0, currentTransformX);
-            lists.style.transform = `translateX(${currentTransformX}px)`;
+            listsContainer.scrollLeft -= scrollWidth;
         });
         window.addEventListener("resize", () => {
-            scrollWidth = 0.8 * listsContainer.offsetWidth;
+            scrollWidth = 0.9 * listsContainer.offsetWidth;
         });
         function changeImage_left(button) {
             const img = button.querySelector("img");
@@ -134,6 +129,11 @@
                     let attractions = document.querySelector(".attractions");
                     let attraction = document.createElement("div");
                     attraction.className = "attraction"; 
+                    attraction.style.cursor = "pointer";
+                    let id = data["data"][i]["id"];
+                    attraction.onclick = function() {
+                        window.location.href = "/attraction/" + id;
+                    };
                     attractions.appendChild(attraction);
                     let imgContainer = document.createElement("div");
                     imgContainer.className = "img-container"; 
@@ -239,6 +239,10 @@
             searchInput.value = event.target.textContent;
             nextPage = submitSearch();
         });
+
+        function homePage(){
+            window.location.href = "/";
+        }
     </script>
 </body>
 </html>
