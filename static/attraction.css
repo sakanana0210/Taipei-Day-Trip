@@ -87,8 +87,10 @@ main {
 }
 
 hr {
-    border: 1px solid #E8E8E8;
+    background-color: #E8E8E8;
+    border: none;
     width: 100vw;
+    height: 1px;
 }
 
 #hr-top{
@@ -491,14 +493,11 @@ input[type="date"].selected:before {
 
 .infors > div > .infor-content {
     display: block;
-    align-items: center;
     font-size: 16px;
     font-weight: 400;
     color: #666666;
     line-height: 24px;
     width: 100%;
-    white-space: wrap;
-    word-wrap: break-word; 
     overflow-wrap: break-word;
 }
 
@@ -517,6 +516,10 @@ input[type="date"].selected:before {
     }
     .attraction-picture {
         width: 540px;
+    }
+    main hr{
+        width: 1200px;
+        margin: auto;
     }
 }
 
