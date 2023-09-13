@@ -84,6 +84,8 @@ footer {
 main {
     height: auto;
     margin: 0px auto;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 hr {
