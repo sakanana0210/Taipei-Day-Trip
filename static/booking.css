@@ -91,16 +91,47 @@ main {
     width: 100%;
     height: auto;
     padding: 40px 0px 40px 0px;
+    margin: auto;
+    margin-top: 94px;
 }
 
-#hr-top {
-    margin-top: 54px;
+.itinerary-container {
+    background-color: red;
+    width: auto;
+    height: 200px;
+}
+
+.information-title {
+    height: 27px;
+    display: flex;
+    align-items: center;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 16px;
+    color: #666666;
+}
+
+.attraction-information {
+    margin-top: 30px;
+    background-color: rebeccapurple;
 }
 
 hr {
-    border: 1px solid #E8E8E8;
+    background-color: #E8E8E8;
+    border: none;
     width: 100vw;
+    height: 1px;
 }
+
+.information-hr {
+    margin: 40px auto;
+}
+
+#hr-top{
+    position: fixed;
+    z-index: 98;
+}
+
 
 @media (min-width: 600px){
     .navbar {
@@ -115,8 +146,11 @@ hr {
 }
 
 @media (min-width: 1200px) {
-    .navbar {
+    .navbar, hr, main {
         width: 1200px;
+    }
+    #hr-top{
+        width: 100vw;
     }
 }
 
