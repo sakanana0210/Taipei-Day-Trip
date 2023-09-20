@@ -270,9 +270,12 @@ def user():
 def user_auth():
 	cnx = conn_pool.get_connection()
 	cursor = cnx.cursor()
+	print("step 1")
 	try:
 		if request.method == "PUT":
+			print("step 2")
 			data = request.get_json()
+			print("step 3")
 			email = data["email"]
 			password = data["password"]
 			cursor.execute("SELECT id, name, email FROM member WHERE BINARY email = %s and password = %s ", (email,password))
