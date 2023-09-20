@@ -4,14 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
     <title>台北一日遊</title>
-    <link rel="stylesheet" href="../static/booking.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='booking.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
 </head>
 <body>
     <header>
+        {% include "signin_component.html" %}
         <div class="navbar-container">
             <div class="navbar">
-                <h2>台北一日遊</h2>
+                <h2 onclick="homePage()">台北一日遊</h2>
                 <div class="navbar-lists">
                     <button class="navbar-list" id="booking">預定行程</button>
                     <button class="navbar-list" id="sign-up-in">登入/註冊</button>
@@ -38,6 +39,8 @@
     <footer>
         <p class="footer-text">COPYRIGHT © 2021 台北一日遊</p>
     </footer>
+    
+    <script src="{{ url_for('static', filename='js/member.js') }}"></script>
     <script>
     </script>
 </body>

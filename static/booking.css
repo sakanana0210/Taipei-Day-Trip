@@ -38,6 +38,7 @@ header {
     width: 150px;
     height: 34px;
     margin: 0;
+    cursor: pointer;
 }
 
 .navbar-lists{
@@ -92,7 +93,7 @@ main {
     height: auto;
     padding: 40px 0px 40px 0px;
     margin: auto;
-    margin-top: 94px;
+    margin-top: 54px;
 }
 
 .itinerary-container {
@@ -129,6 +130,7 @@ hr {
 
 #hr-top{
     position: fixed;
+    margin-top: 0;
     z-index: 98;
 }
 

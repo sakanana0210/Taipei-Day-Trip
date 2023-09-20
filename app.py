@@ -1,14 +1,55 @@
 from flask import *
 import mysql.connector
 import mysql.connector.pooling
+import jwt
+from datetime import datetime, timedelta
+import re
+import json
+
+secret_key = "Ca6478B46s551BE1DD067Dds8CB4D71CD9CCBE2E4571047DCE18669B19a257c3C"
+
+def create_jwt(user_id, user_name, user_email):
+	payload = {"id": user_id,
+		"name": user_name,
+		"email": user_email,
+		"exp": datetime.utcnow() + timedelta(days=7)
+		}
+	token = jwt.encode(payload, secret_key, algorithm = "HS256")
+	return token
+
+def verify_jwt(token):
+	try:
+		payload = jwt.decode(token, secret_key, algorithms=["HS256"])
+		new_data = {
+		"data": {
+			"id": payload["id"],
+			"name": payload["name"],
+			"email": payload["email"]
+		}
+		}
+		json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+		return json_data
+	except jwt.ExpiredSignatureError:
+		new_data = {
+		"data": None
+		}
+		json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+		return json_data
+	except jwt.InvalidTokenError:
+		new_data = {
+		"data": None
+		}
+		json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+		return json_data
+
 dbconfig = {
     "user": "root", 
     "password": "ji3cl31;4", 
-	"port": "3307",
     "host": "127.0.0.1", 
     "database": "taipei_day_trip",
     "charset": "utf8"
 }
+
 conn_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name = "mypool",
                             pool_size = 5,
                             **dbconfig)
@@ -166,6 +207,112 @@ def mrts():
 		json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
 		response = Response(json_data, status=500, content_type="application/json; charset=utf-8")
 		return response
+	finally:
+		if cursor:
+			cursor.close()
+		if cnx:
+			cnx.close()
+
+def check_password(password):
+	pattern = r"^(?=.*[A-Za-z])(?=.*\d).{8,20}$"
+	return re.match(pattern, password)
+
+def check_email(email):
+	pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+	return re.match(pattern, email)
+
+@app.route("/api/user", methods=["POST"])
+def user():
+	try:
+		cnx = conn_pool.get_connection()
+		cursor = cnx.cursor()
+		data = request.get_json()
+		name = data["name"]
+		email = data["email"]
+		password = data["password"]
+		cursor.execute("SELECT email FROM member WHERE BINARY email = %s", (email,))
+		useremail = cursor.fetchone()
+		if not check_email(email):
+			error_message = "email格式錯誤"
+			new_data = {"error": True, "message": error_message}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
+			return response
+		elif useremail:
+			error_message = "email已經被註冊"
+			new_data = {"error": True, "message": error_message}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
+			return response
+		elif not check_password(password):
+			error_message = "密碼格式錯誤 (需包含字母與數字，且長度在8到20之間)"
+			new_data = {"error": True, "message": error_message}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
+			return response
+		else:
+			cursor.execute("INSERT INTO member (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
+			cnx.commit()
+			return jsonify({"ok": True}), 200
+	except Exception as e:
+		error_message = "伺服器內部錯誤: {}".format(str(e))
+		new_data = {"error": True, "message": error_message}
+		json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+		response = Response(json_data, status=500, content_type="application/json; charset=utf-8")
+		return response
+	finally:
+		if cursor:
+			cursor.close()
+		if cnx:
+			cnx.close()
+
+@app.route("/api/user/auth", methods=["GET", "PUT"])
+def user_auth():
+	cnx = conn_pool.get_connection()
+	cursor = cnx.cursor()
+	try:
+		if request.method == "PUT":
+			data = request.get_json()
+			email = data["email"]
+			password = data["password"]
+			cursor.execute("SELECT id, name, email FROM member WHERE BINARY email = %s and password = %s ", (email,password))
+			user_matched = cursor.fetchone()
+			if (user_matched):
+				token = create_jwt(user_matched[0],user_matched[1],user_matched[2])
+				new_data = {"token": token}
+				json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+				response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+				return response
+			else:
+				cursor.execute("SELECT name FROM member WHERE BINARY email = %s", (email,))
+				user_unmatched = cursor.fetchone()
+				if(not user_unmatched):
+					error_message = "登入失敗，此email尚未註冊"
+				else: 
+					error_message = "登入失敗，密碼錯誤"
+				new_data = {"error": True, "message": error_message}
+				json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+				response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
+				return response
+		elif request.method == "GET":
+			token = request.headers.get("Authorization")
+			new_data = verify_jwt(token.split(" ")[1])
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+			return response
+		
+	except Exception as e:
+		if request.method == "PUT":
+			error_message = "伺服器內部錯誤: {}".format(str(e))
+			new_data = {"error": True, "message": error_message}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=500, content_type="application/json; charset=utf-8")
+			return response
+		elif request.method == "GET":
+			new_data = { "data": None }
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+			return response
 	finally:
 		if cursor:
 			cursor.close()
