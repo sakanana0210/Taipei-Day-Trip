@@ -225,16 +225,13 @@ def check_email(email):
 def user():
 	cnx = conn_pool.get_connection()
 	cursor = cnx.cursor()
-	print("mysql done")
 	try:
 		data = request.get_json()
-		print("get data done")
 		name = data["name"]
 		email = data["email"]
 		password = data["password"]
 		cursor.execute("SELECT email FROM member WHERE BINARY email = %s", (email,))
 		useremail = cursor.fetchone()
-		print("cursor done")
 		if not check_email(email):
 			error_message = "email格式錯誤"
 			new_data = {"error": True, "message": error_message}
@@ -271,7 +268,6 @@ def user():
 
 @app.route("/api/user/auth", methods=["GET", "PUT"])
 def user_auth():
-
 	try:
 		if request.method == "PUT":
 			cnx = conn_pool.get_connection()
@@ -319,9 +315,10 @@ def user_auth():
 			response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
 			return response
 	finally:
-		if cursor:
-			cursor.close()
-		if cnx:
-			cnx.close()
+		if request.method == "PUT":
+			if cursor:
+				cursor.close()
+			if cnx:
+				cnx.close()
 
 app.run(host="0.0.0.0", port=3000)
