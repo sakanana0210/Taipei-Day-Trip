@@ -223,9 +223,9 @@ def check_email(email):
 
 @app.route("/api/user", methods=["POST"])
 def user():
+	cnx = conn_pool.get_connection()
+	cursor = cnx.cursor()
 	try:
-		cnx = conn_pool.get_connection()
-		cursor = cnx.cursor()
 		data = request.get_json()
 		name = data["name"]
 		email = data["email"]
@@ -305,6 +305,7 @@ def user_auth():
 		if request.method == "PUT":
 			error_message = "伺服器內部錯誤: {}".format(str(e))
 			new_data = {"error": True, "message": error_message}
+			print(new_data)
 			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
 			response = Response(json_data, status=500, content_type="application/json; charset=utf-8")
 			return response
