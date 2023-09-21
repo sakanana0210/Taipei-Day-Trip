@@ -112,11 +112,6 @@ main {
     color: #666666;
 }
 
-.attraction-information {
-    margin-top: 30px;
-    background-color: rebeccapurple;
-}
-
 hr {
     background-color: #E8E8E8;
     border: none;
@@ -134,6 +129,25 @@ hr {
     z-index: 98;
 }
 
+.attraction-container {
+    display: flex;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.attraction-img {
+    width: 250px;
+    height: 200px;
+    background-color: #448899;
+    margin: 0 30px 0px 0px;
+}
+
+.attraction-information {
+    width: calc(100% - 280px);
+    height: 200px;
+    background-color: #448899;
+}
 
 @media (min-width: 600px){
     .navbar {
