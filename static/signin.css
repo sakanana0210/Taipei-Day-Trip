@@ -1,0 +1,124 @@
+.sign-container {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.25);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top:0;
+    z-index: 1500;
+}
+
+.sign-in.show{
+    transform: translateY(0);
+    transition: transform 0.3s; 
+}
+
+
+.sign-in {
+    transform: translateY(-100%);
+    width: 340px;
+    height: 275px;
+    background-color: #FFFFFF;
+    margin-top: 80px;
+    border-radius: 6px;
+    z-index: 2000;
+    box-shadow: 0px 4px 60px 0px #AAAAAA;
+    overflow: hidden;
+}
+
+.sign-up {
+    width: 340px;
+    height: 332px;
+    background-color: #FFFFFF;
+    margin-top: 80px;
+    border-radius: 6px;
+    z-index: 2000;
+    box-shadow: 0px 4px 60px 0px #AAAAAA;
+    overflow: hidden;
+}
+
+.close-container {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    margin: auto;
+    cursor: pointer;    
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 300px;
+}
+
+.close-container > img {
+    margin: 7px;
+    width: 16px;
+    height: 16px;
+}
+
+.decorator-bar {
+    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
+    height: 10px;
+}
+
+.sign-in-text-container {
+    padding: 15px;
+    text-align: center;
+}
+
+.sign-in-text-container > h3 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #666666;
+}
+
+.sign-in-input, input[type="password"] {
+    width: 310px;
+    height: 47px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 13px;
+    color: #757575;
+}
+
+.change-signupin{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666666;
+    cursor: pointer;
+    height: 22px;
+}
+
+.message_container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #448899;
+    height: auto;
+    margin-top: 10px;
+}
+
+
+.sign-in-submit {
+    width: 310px;
+    height: 47px;
+    padding: 10px, 20px, 10px, 20px;
+    border-radius: 5px;
+    background-color: #448899;
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 16px;
+    border: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+}

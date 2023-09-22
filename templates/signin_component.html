@@ -1,0 +1,39 @@
+<div class="signin_component">
+    <div class="sign-container" id="signin-container" style="display: none;">
+        <div class="sign-in">
+            <div class="decorator-bar"></div>
+            <div class="close-container" id="btn-signin-close">
+                <img src="../static/img/icon_close.png" />
+            </div>
+            <div class="sign-in-text-container" id="sign-in-text-container" >
+                <h3>登入會員帳號</h3>
+                <form method="put" action="/api/user/auth" onsubmit="return submitSignIn()"> 
+                    <input class="sign-in-input" name="signin_email" placeholder="輸入電子信箱">
+                    <input type="password" class="sign-in-input" name="signin_password" placeholder="輸入密碼">
+                    <button class="sign-in-submit">登入帳戶</button>
+                </form>
+                <p class="change-signupin" id="sign-in-to-sign-up">還沒有帳戶？點此註冊</p>
+                <div class="message_container" id="message_signin" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sign-container" id="signup-container" style="display: none;">
+        <div class="sign-up">
+            <div class="decorator-bar"></div>
+            <div class="close-container" id="btn-signup-close">
+                <img src="../static/img/icon_close.png" />
+            </div>
+            <div class="sign-in-text-container" id="sign-up-text-container">
+                <h3>註冊會員帳號</h3>
+                <form method="post" action="/api/user" onsubmit="return submitSignUp()">
+                    <input class="sign-in-input" name="signup_name" placeholder="輸入姓名">
+                    <input class="sign-in-input" name="signup_email" placeholder="輸入電子郵件">
+                    <input type="password" class="sign-in-input" name="signup_password" placeholder="輸入密碼">
+                    <button class="sign-in-submit">註冊新帳戶</button>
+                </form>
+                <p class="change-signupin" id="sign-up-to-sign-in">已經有帳戶了？點此登入</p>
+                <div class="message_container" id="message_signup" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>

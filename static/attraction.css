@@ -6,6 +6,12 @@
     color: #666666;
 }
 
+#data-icon {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+}
+
 header {
     display: block;
     height: 54px;

@@ -4,14 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
     <title>台北一日遊</title>
-    <link rel="stylesheet" href="../static/booking.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='booking.css') }}">
 </head>
 <body>
     <header>
+        {% include "signin_component.html" %}
         <div class="navbar-container">
             <div class="navbar">
-                <h2>台北一日遊</h2>
+                <h2 onclick="homePage()">台北一日遊</h2>
                 <div class="navbar-lists">
                     <button class="navbar-list" id="booking">預定行程</button>
                     <button class="navbar-list" id="sign-up-in">登入/註冊</button>
@@ -23,22 +24,81 @@
     <main>
         <div class="itinerary-container">
             <h2 class="information-title">您好，Yakko，待預訂的行程如下：</h2>
-            <div class="attraction-information">@@@</div>
+            <div class="attraction-container">
+                <div class="attraction-img"><img src="../static/img/img.png"></div>
+                <div class="attraction-information">
+                    <div class="attraction-title">台北一日遊：平安鐘</div>
+                    <div class="attraction-item">日期：<span>2021-04-23</span></div>
+                    <div class="attraction-item">時間：<span>早上 9 點到下午 4 點</span></div>
+                    <div class="attraction-item">費用：<span>新台幣 2000 元</span></div>
+                    <div class="attraction-item">地點：<span>與圖片邊緣margin30</span></div>
+                    <div class="delete-icon"></div>
+                </div>
+            </div>
         </div>
-        <hr class="information-hr">
+        <hr class="information-hr">     
         <div class="contact-information-container">
+            <h2 class="information-title information-title-marginbtn20">您的聯絡資訊</h2>
+            <div class="information-item">
+                <label for="name-input" class="form-subtitle">聯絡姓名：</label>
+                <input id="name-input" type="text" value="自動填入">
+            </div>
+            <div class="information-item">
+                <label for="email-input" class="form-subtitle">聯絡信箱：</label>
+                <input id="email-input" type="text" value="自動填入">
+            </div>
+            <div class="information-item">
+                <label for="phone-input" class="form-subtitle">手機號碼：</label>
+                <input id="phone-input" type="tel" value="">
+            </div>
+            <div class="attention">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div> 
         </div>
         <hr class="information-hr">
         <div class="pay-information-container">
+            <h2 class="information-title information-title-marginbtn20">信用卡付款資訊</h2>
+            <div class="information-item">
+                <label for="card-input" class="form-subtitle">卡片號碼：</label>
+                <input id="card-input" type="text" placeholder="**** **** **** ****" maxlength="19" required>
+            </div>
+            <div class="information-item">
+                <label for="cardexp-input" class="form-subtitle">過期時間：</label>
+                <input id="cardexp-input" type="text" placeholder="MM / YY" maxlength="7" required>
+            </div>
+            <div class="information-item">
+                <label for="cardcode-input" class="form-subtitle">驗證密碼：</label>
+                <input id="cardcode-input" type="password" placeholder="CVV" maxlength="4" required>
+            </div>
         </div>
         <hr class="information-hr">
         <div class="check-container">
+            <div class="check-price">總價：新台幣 2000 元</div>
+            <button>確認訂購並付款</button>
         </div>
     </main>
     <footer>
         <p class="footer-text">COPYRIGHT © 2021 台北一日遊</p>
     </footer>
+    
+    <script src="{{ url_for('static', filename='js/member.js') }}"></script>
     <script>
+        function cardInput(){
+            let cardInput = document.getElementById("card-input");
+            cardInput.addEventListener("input", (e) => {
+                let cleanedValue = e.target.value.replace(/\D/g, "");
+                let formattedValue = cleanedValue.replace(/(\d{4})(?=\d)/g, "$1 ");
+                e.target.value = formattedValue;
+            })
+        }
+        function cardExpInput(){
+            let expInput = document.getElementById("cardexp-input");
+            expInput.addEventListener("input", (e) => {
+                let cleanedValue = e.target.value.replace(/\D/g, "");
+                let formattedValue = cleanedValue.replace(/(\d{2})(?=\d)/g, "$1 / ");
+                e.target.value = formattedValue;
+            })
+        }
+        cardInput();
+        cardExpInput();
     </script>
 </body>
 </html>
