@@ -45,7 +45,6 @@ def verify_jwt(token):
 dbconfig = {
     "user": "root", 
     "password": "ji3cl31;4", 
-	"port": "3307",
     "host": "127.0.0.1", 
     "database": "taipei_day_trip",
     "charset": "utf8"
@@ -322,6 +321,7 @@ def user_auth():
 			if cnx:
 				cnx.close()
 
+<<<<<<< HEAD
 # Booking 
 @app.route("/api/booking", methods=["GET", "POST", "DELETE"])
 def booking():
@@ -338,4 +338,6 @@ def booking():
 		if cnx:
 			cnx.close()
 
+=======
+>>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
 app.run(host="0.0.0.0", port=3000)

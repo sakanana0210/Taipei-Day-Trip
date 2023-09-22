@@ -111,10 +111,13 @@ main {
     color: #666666;
 }
 
+<<<<<<< HEAD
 .information-title-marginbtn20 {
     margin-bottom: 20px;
 }
 
+=======
+>>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
 hr {
     background-color: #E8E8E8;
     border: none;
@@ -137,6 +140,28 @@ hr {
     margin-top: 30px;
     margin-left: 10px;
     margin-right: 10px;
+<<<<<<< HEAD
+=======
+}
+
+.attraction-img {
+    width: 250px;
+    height: 200px;
+    background-color: #448899;
+    margin: 0 30px 0px 0px;
+}
+
+.attraction-information {
+    width: calc(100% - 280px);
+    height: 200px;
+    background-color: #448899;
+}
+
+@media (min-width: 600px){
+    .navbar {
+        width: 90%;
+    }
+>>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
 }
 
 .attraction-img {
