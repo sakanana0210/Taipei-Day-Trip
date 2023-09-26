@@ -35,8 +35,20 @@ function handleClickSignin() {
     innerSignin.offsetWidth;
     innerSignin.classList.add("show");
 }
+
+function handleClickBooking() {
+    if(signinState === true){
+        window.location.href = "/booking";
+    } else {
+        handleClickSignin();
+    }
+}
+
 let btnToSingupSingin = document.getElementById("sign-up-in");
 btnToSingupSingin.addEventListener("click", handleClickSignin)
+
+let btnToBooking = document.getElementById("booking");
+btnToBooking.addEventListener("click", handleClickBooking)
 
 let btnSignInToSignUp = document.getElementById("sign-in-to-sign-up");
 btnSignInToSignUp.addEventListener("click", () => {
@@ -185,6 +197,7 @@ function submitSignUp() {
     });
 }
 
+let signinState = false;
 function getSigninToken() {
     let token = localStorage.getItem("token");
     let singinSingout = document.getElementById("sign-up-in");
@@ -203,19 +216,22 @@ function getSigninToken() {
         }
     })
     .then(() => {
-        singinSingout.innerHTML = "登出系統"
+        signinState = true;
+        singinSingout.innerHTML = "登出系統";
         btnToSingupSingin.removeEventListener("click", handleClickSignin);
         btnToSingupSingin.addEventListener("click", handleClickSignout);
     })
     } else {
-        console.log("oops");
+        return;
     }
 }
+
 function handleClickSignout(){
     localStorage.removeItem("token");
-        setTimeout(() => {
-            location.reload();
-        }, 20);
+    signinState = false;
+    setTimeout(() => {
+        location.reload();
+    }, 20);
 }
 
 getSigninToken();

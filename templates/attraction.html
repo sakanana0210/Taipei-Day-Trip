@@ -36,13 +36,13 @@
             <div class="attraction-profile">
                 <div class="attraction-container">
                 </div>
-                <form class="booking-form">
+                <form class="booking-form" method="post" onsubmit="return submitBooking()">
                     <div class="booking-title"><p class="form-subtitle-1st">訂購導覽行程</p></div>
                     <div class="booking-content"><p class="form-subtitle-content">以此景點為中心的一日行程，帶您探索城市角落故事</p></div>
                     <div class="date">
                         <span class="form-subtitle">選擇日期：</span>
                         <div class="date-input-container">
-                            <input id="date-input" type="date" placeholder="yyyy/mm/dd">
+                            <input id="date-input" type="date" placeholder="yyyy/mm/dd" required>
                         </div>
                     </div>
                     <div class="time">
@@ -97,6 +97,7 @@
         // fetch attraction id
         const currentURL = window.location.href;
         let attractionId = currentURL.split("attraction/")[1];
+        attractionId = attractionId.match(/\d+/)[0];
         url = "/api/attraction/" + attractionId;
         fetch(url)
         .then(response => {
@@ -239,9 +240,47 @@
         .catch(() => {
             homePage();
         });
-        
-        function homePage(){
-            window.location.href = "/";
+
+        function submitBooking(){
+            event.preventDefault();
+            let bookingDate = document.getElementById("date-input").value;
+            let morningTime = document.getElementById("morning-time");
+            let afternoonTime = document.getElementById("afternoon-time");
+            let bookingTime;
+            let bookingPrice;
+            if (morningTime.checked) {
+                bookingTime = "morning";
+                bookingPrice = "2000";
+            } else if (afternoonTime.checked){
+                bookingTime = "afternoon";
+                bookingPrice = "2500";
+            }
+            let formData = {
+                "attractionId": attractionId,
+                "date": bookingDate,
+                "time": bookingTime,
+                "price": bookingPrice
+            };
+            let jsonData = JSON.stringify(formData);
+            let token = localStorage.getItem("token");
+            fetch("/api/booking", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: jsonData
+            })
+            .then(response => {
+                if (response.status === 200){
+                    window.location.href = "/booking";
+                } else if (response.status === 403){
+                    handleClickSignin();
+                } else {
+                    console.error("error");
+                }
+            }
+            );
         }
     </script>
 </body>

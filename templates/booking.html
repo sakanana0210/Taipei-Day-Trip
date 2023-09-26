@@ -4,12 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
     <title>台北一日遊</title>
-<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
-=======
->>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='booking.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
 </head>
 <body>
     <header>
@@ -26,74 +22,58 @@
     </header>
     <hr id="hr-top">
     <main>
-        <div class="itinerary-container">
-            <h2 class="information-title">您好，Yakko，待預訂的行程如下：</h2>
-            <div class="attraction-container">
-<<<<<<< HEAD
-                <div class="attraction-img"><img src="../static/img/img.png"></div>
-=======
-                <div class="attraction-img">250*200 左右margin8px</div>
->>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
-                <div class="attraction-information">
-                    <div class="attraction-title">台北一日遊：平安鐘</div>
-                    <div class="attraction-item">日期：<span>2021-04-23</span></div>
-                    <div class="attraction-item">時間：<span>早上 9 點到下午 4 點</span></div>
-                    <div class="attraction-item">費用：<span>新台幣 2000 元</span></div>
-                    <div class="attraction-item">地點：<span>與圖片邊緣margin30</span></div>
-<<<<<<< HEAD
-                    <div class="delete-icon"></div>
+        <h2 class="information-title" id="hello_name"></h2>
+        <div id="no-booking"></div>
+        <div class="attraction-container">
+            <div class="attraction-img"><img id="attraction-image"></div>
+            <div class="attraction-information">
+                <div class="attraction-title" id="attraction-title"></div>
+                <div class="attraction-item">日期：<span id="attraction-date"></span></div>
+                <div class="attraction-item">時間：<span id="attraction-time"></span></div>
+                <div class="attraction-item">費用：<span id="attraction-price"></span></div>
+                <div class="attraction-item">地點：<span id="attraction-address"></span></div>
+                <div class="delete-icon"></div>
+            </div>
+        </div>
+        <div id="all-information-containter">
+            <hr class="information-hr">     
+            <div class="contact-information-container"> 
+                <h2 class="information-title information-title-marginbtn20">您的聯絡資訊</h2>
+                <div class="information-item">
+                    <label for="name-input" class="form-subtitle">聯絡姓名：</label>
+                    <input id="name-input" type="text">
+                </div>
+                <div class="information-item">
+                    <label for="email-input" class="form-subtitle">聯絡信箱：</label>
+                    <input id="email-input" type="text">
+                </div>
+                <div class="information-item">
+                    <label for="phone-input" class="form-subtitle">手機號碼：</label>
+                    <input id="phone-input" type="tel" value="" maxlength="10">
+                </div>
+                <div class="attention">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div> 
+            </div>
+            <hr class="information-hr">
+            <div class="pay-information-container">
+                <h2 class="information-title information-title-marginbtn20">信用卡付款資訊</h2>
+                <div class="information-item">
+                    <label for="card-input" class="form-subtitle">卡片號碼：</label>
+                    <input id="card-input" type="text" placeholder="**** **** **** ****" maxlength="19" required>
+                </div>
+                <div class="information-item">
+                    <label for="cardexp-input" class="form-subtitle">過期時間：</label>
+                    <input id="cardexp-input" type="text" placeholder="MM / YY" maxlength="7" required>
+                </div>
+                <div class="information-item">
+                    <label for="cardcode-input" class="form-subtitle">驗證密碼：</label>
+                    <input id="cardcode-input" type="password" placeholder="CVV" maxlength="4" required>
                 </div>
             </div>
-        </div>
-        <hr class="information-hr">     
-=======
-                </div>
+            <hr class="information-hr">
+            <div class="check-container">
+                <div class="check-price"></div>
+                <button>確認訂購並付款</button>
             </div>
-            
-        </div>
-        <hr class="information-hr">
-            <h2 class="information-title">您的聯絡資訊</h2>
-            <div class="information-name">
-                <span class="form-subtitle">聯絡姓名：</span>
-                <input id="name-input" type="text" value="Yakko">
-            </div>
->>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
-        <div class="contact-information-container">
-            <h2 class="information-title information-title-marginbtn20">您的聯絡資訊</h2>
-            <div class="information-item">
-                <label for="name-input" class="form-subtitle">聯絡姓名：</label>
-                <input id="name-input" type="text" value="自動填入">
-            </div>
-            <div class="information-item">
-                <label for="email-input" class="form-subtitle">聯絡信箱：</label>
-                <input id="email-input" type="text" value="自動填入">
-            </div>
-            <div class="information-item">
-                <label for="phone-input" class="form-subtitle">手機號碼：</label>
-                <input id="phone-input" type="tel" value="">
-            </div>
-            <div class="attention">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div> 
-        </div>
-        <hr class="information-hr">
-        <div class="pay-information-container">
-            <h2 class="information-title information-title-marginbtn20">信用卡付款資訊</h2>
-            <div class="information-item">
-                <label for="card-input" class="form-subtitle">卡片號碼：</label>
-                <input id="card-input" type="text" placeholder="**** **** **** ****" maxlength="19" required>
-            </div>
-            <div class="information-item">
-                <label for="cardexp-input" class="form-subtitle">過期時間：</label>
-                <input id="cardexp-input" type="text" placeholder="MM / YY" maxlength="7" required>
-            </div>
-            <div class="information-item">
-                <label for="cardcode-input" class="form-subtitle">驗證密碼：</label>
-                <input id="cardcode-input" type="password" placeholder="CVV" maxlength="4" required>
-            </div>
-        </div>
-        <hr class="information-hr">
-        <div class="check-container">
-            <div class="check-price">總價：新台幣 2000 元</div>
-            <button>確認訂購並付款</button>
         </div>
     </main>
     <footer>
@@ -120,6 +100,94 @@
         }
         cardInput();
         cardExpInput();
+        
+        let token = localStorage.getItem("token");
+        let nameDiv = document.getElementById("hello_name");
+        let nameInput = document.getElementById("name-input");
+        let emailInput = document.getElementById("email-input");
+        if(token){
+            fetch("/api/user/auth", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json().then(data => {
+                        if (data.data == null) {
+                            window.location.href = "/";
+                        } else {
+                            nameDiv.innerHTML = "您好，" + data.data.name + "，待預訂的行程如下：";
+                            nameInput.value = data.data.name;
+                            emailInput.value =data.data.email;
+                        }
+                    });
+                }
+            })
+            fetch("/api/booking", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.status === 200){
+                    let attractionTitle = document.getElementById("attraction-title");
+                    let attractionDate = document.getElementById("attraction-date");
+                    let attractionPrice = document.getElementById("attraction-price");
+                    let attractionAddress = document.getElementById("attraction-address");
+                    let attractionTime = document.getElementById("attraction-time");
+                    let attractionImage = document.getElementById("attraction-image");
+                    let allInformationContainter = document.getElementById("all-information-containter");
+                    let attractionContainer = document.querySelector(".attraction-container");
+                    let noBooking = document.getElementById("no-booking");
+                    let checkPrice = document.querySelector(".check-price");
+                    return response.json().then(data => {
+                    if (data.data == null) {
+                        allInformationContainter.innerHTML = "";
+                        attractionContainer.innerHTML = "";
+                        attractionContainer.style.display= "none";
+                        noBooking.innerHTML = "目前沒有任何待預訂的行程";
+                        noBooking.style.display = "flex";
+                    } else {
+                        noBooking.style.display = "none";
+                        attractionDate.innerHTML = data.data.date;
+                        attractionPrice.innerHTML =  "新台幣"+ data.data.price + "元";
+                        attractionAddress.innerHTML = data.data.attraction.address;
+                        let exactTime;
+                        if(data.data.time === "morning"){
+                            exactTime = "早上 9 點到下午 4 點";
+                        } else {
+                            exactTime = "下午 1 點到晚上 8 點"
+                        }
+                        attractionTime.innerHTML = exactTime;
+                        attractionTitle.innerHTML = data.data.attraction.name;
+                        attractionImage.src = data.data.attraction.image;
+                        checkPrice.innerHTML = "總價：新台幣 " + data.data.price + " 元"
+                    }
+                })}
+            })
+        }
+        else {
+            window.location.href = "/";
+        }
+        let deleteIcon = document.querySelector(".delete-icon");
+        deleteIcon.addEventListener("click", () => {
+            fetch("/api/booking", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                location.reload();
+                } else {
+                console.error("刪除失敗");
+                }
+            })
+        })
     </script>
 </body>
 </html>

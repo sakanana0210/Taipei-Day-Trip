@@ -56,6 +56,7 @@ conn_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name = "mypool",
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
+app.config['SECRET_KEY'] = "SzsDAFWE51BdsafE1DD06asfasfASEWR8669dB19a2257c3Czz"
 
 # Pages
 @app.route("/")
@@ -297,15 +298,13 @@ def user_auth():
 		elif request.method == "GET":
 			token = request.headers.get("Authorization")
 			new_data = verify_jwt(token.split(" ")[1])
-			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
-			response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+			response = Response(new_data, status=200, content_type="application/json; charset=utf-8")
 			return response
 		
 	except Exception as e:
 		if request.method == "PUT":
 			error_message = "伺服器內部錯誤: {}".format(str(e))
 			new_data = {"error": True, "message": error_message}
-			print(new_data)
 			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
 			response = Response(json_data, status=500, content_type="application/json; charset=utf-8")
 			return response
@@ -321,23 +320,96 @@ def user_auth():
 			if cnx:
 				cnx.close()
 
-<<<<<<< HEAD
-# Booking 
 @app.route("/api/booking", methods=["GET", "POST", "DELETE"])
-def booking():
+def api_booking():
 	try:
-		if request.method == "GET":
-			# 確認登入
-			# 按下預定行程 由ID SELECT
-		elif request.method == "POST":
+		token = request.headers.get("Authorization")
+		user_info = verify_jwt(token.split(" ")[1])
+		user_info_dict = json.loads(user_info.decode("utf-8"))
+		if user_info_dict["data"] is None:
+			error_message = "未登入系統，拒絕存取"
+			new_data = {"error": True, "message": error_message}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=403, content_type="application/json; charset=utf-8")
+			return response
+		
+		if request.method == "POST":
+			booking_data = request.get_json()
+			for key, value in booking_data.items():
+				if value == "" or value is None:
+					error_message = "建立失敗，輸入不正確或其他原因"
+					new_data = {"error": True, "message": error_message}
+					json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+					response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
+					return response
+			for key, value in booking_data.items():
+				session[key] = value
+			new_data = {"ok": True}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+			return response
+		
+		elif request.method == "GET":
+			cnx = conn_pool.get_connection()
+			cursor = cnx.cursor()
+			attraction_id = session.get("attractionId")
+			if (attraction_id is None or attraction_id == ""):
+				new_data = {"data": None}
+				json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+				response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+				return response
+			booking_date = session.get("date")
+			booking_time = session.get("time")
+			booking_price = session.get("price")
+			query = "SELECT id, name, address, images FROM attractions WHERE id = %s;"
+			cursor.execute(query,(attraction_id, ))
+			result = cursor.fetchone()
+			images = json.loads(result[3])
+			new_data = {
+				"data": {
+					"attraction": {
+						"id": result[0],
+						"name": result[1],
+						"address": result[2],
+						"image": images[0]
+					},
+					"date": booking_date, 
+					"time": booking_time, 
+					"price": booking_price
+				}
+			}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+			return response
+		
 		elif request.method == "DELETE":
-	except Exception as e:
-	finally:
-		if cursor:
-			cursor.close()
-		if cnx:
-			cnx.close()
+			del session["attractionId"]
+			del session["date"]
+			del session["time"]
+			del session["price"]
+			new_data = {"ok": True}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+			return response
 
-=======
->>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
+	except Exception as e:
+		if request.method == "POST":
+			error_message = "伺服器內部錯誤: {}".format(str(e))
+			new_data = {"error": True, "message": error_message}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=500, content_type="application/json; charset=utf-8")
+			return response
+		elif request.method == "GET":
+			new_data = {"data": None}
+			json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+			response = Response(json_data, status=200, content_type="application/json; charset=utf-8")
+			return response
+
+	finally:
+		if request.method == "GET":
+			if cursor:
+				cursor.close()
+			if cnx:
+				cnx.close()
+
 app.run(host="0.0.0.0", port=3000)

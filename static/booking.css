@@ -96,11 +96,6 @@ main {
     margin-top: 54px;
 }
 
-.itinerary-container {
-    width: auto;
-    height: 257px;
-}
-
 .information-title {
     height: 27px;
     display: flex;
@@ -111,13 +106,10 @@ main {
     color: #666666;
 }
 
-<<<<<<< HEAD
 .information-title-marginbtn20 {
     margin-bottom: 20px;
 }
 
-=======
->>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
 hr {
     background-color: #E8E8E8;
     border: none;
@@ -135,33 +127,11 @@ hr {
     z-index: 98;
 }
 
-.attraction-container {
+.attraction-container, #no-booking {
     display: flex;
     margin-top: 30px;
     margin-left: 10px;
     margin-right: 10px;
-<<<<<<< HEAD
-=======
-}
-
-.attraction-img {
-    width: 250px;
-    height: 200px;
-    background-color: #448899;
-    margin: 0 30px 0px 0px;
-}
-
-.attraction-information {
-    width: calc(100% - 280px);
-    height: 200px;
-    background-color: #448899;
-}
-
-@media (min-width: 600px){
-    .navbar {
-        width: 90%;
-    }
->>>>>>> d232ebe4bbc0fb336e400a23486976a56f6406b0
 }
 
 .attraction-img {
@@ -280,6 +250,13 @@ hr {
     cursor: pointer;
 }
 
+#no-booking {
+    color: #666666;
+    font-size: 16px;
+    font-weight: 500;
+    display: none;
+}
+
 @media (min-width: 1200px) {
     .navbar, main, .information-hr {
         width: 1200px;
@@ -295,7 +272,7 @@ hr {
     }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 650px) {
     .navbar, main{
         width: 100%;
     }
@@ -336,9 +313,13 @@ hr {
     }
 
     .information-hr{
-        width: calc(100% - 20px);
+        width: 100%;
     }
 
+    #hello_name, .attraction-container{
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 }
 
 @media (max-width: 360px) {
