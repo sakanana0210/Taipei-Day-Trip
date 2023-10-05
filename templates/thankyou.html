@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title>台北一日遊</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='thankyou.css') }}">
+</head>
+    <body>
+        <header>
+            {% include "signin_component.html" %}
+            <div class="navbar-container">
+                <div class="navbar">
+                    <h2 onclick="homePage()">台北一日遊</h2>
+                    <div class="navbar-lists">
+                        <button class="navbar-list" id="booking">預定行程</button>
+                        <button class="navbar-list" id="sign-up-in">登入/註冊</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <hr id="hr-top">
+        <main>
+            <h2 class="information-title information-title-marginbtn20">預定完成，您的訂單資訊如下：</h2>
+            <div class="information-container"> 
+                <div class="image-container"></div>
+                <div class="text-container">
+                    <div class="information-item">
+                        <p class="subtitle">訂單編號：</p>
+                    </div>
+                    <div class="information-item">
+                        <p class="subtitle">景點名稱：</p>
+                    </div>
+                    <div class="information-item">
+                        <p class="subtitle">日期：</p>
+                    </div>
+                    <div class="information-item">
+                        <p class="subtitle">時間：</p>
+                    </div>
+                    <div class="information-item">
+                        <p class="subtitle">價格：</p>
+                    </div>
+                    <div class="information-item">
+                        <p class="subtitle">付款狀態：</p>
+                    </div>
+                    <br>
+                    <div class="attention">付款完成後，導覽人員將用手機與您聯繫。</div> 
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p class="footer-text">COPYRIGHT © 2021 台北一日遊</p>
+        </footer>
+        <script src="{{ url_for('static', filename='js/member.js') }}"></script>
+        <script>
+            let queryString = window.location.search;
+            let urlParams = new URLSearchParams(queryString);
+            let orderNumber = urlParams.get("number");
+            let token = localStorage.getItem("token");
+            if(token){
+                fetch( `/api/order/${orderNumber}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    },
+                })
+                .then(response => {
+                    if (response.status === 200){
+                        return response.json();
+                    } 
+                    else {
+                        homePage();
+                    } 
+                })
+                .then(data => {
+                    let dataImage = data["data"]["trip"]["attraction"]["image"];
+                    let dataNumber = data["data"]["number"];
+                    let dataName = data["data"]["trip"]["attraction"]["name"];
+                    let dataDate = data["data"]["trip"]["date"];
+                    let dataTime = data["data"]["trip"]["time"];
+                    let exactTime;
+                    let statusMessage;
+                    if( dataTime === "morning"){
+                        exactTime = "早上 9 點到下午 4 點";
+                    } else {
+                        exactTime = "下午 1 點到晚上 8 點"
+                    }
+                    let dataPrice = data["data"]["price"];
+                    let dataStatus = data["data"]["status"];
+                    dataPrice = "新台幣 " + dataPrice + " 元" 
+                    if( dataStatus === 1){
+                        statusMessage = "付款成功";
+                    } else {
+                        statusMessage = "付款失敗"
+                    }
+                    let imgContainer = document.querySelector(".image-container");
+                    let imgElement = document.createElement("img");
+                    imgElement.src = dataImage;
+                    imgContainer.appendChild(imgElement);
+                    let containers = document.querySelectorAll(".subtitle");
+                    let text_datas = [ dataNumber, dataName, dataDate, exactTime, dataPrice, statusMessage];
+                    let informationElements = [];
+                    for (let i=0; i<containers.length; i++){
+                        let informationElement = document.createElement("span");
+                        informationElement.className = "order-information";
+                        informationElements.push(informationElement);
+                    }
+                    for (let i=0; i<containers.length; i++){
+                        informationElements[i].textContent = text_datas[i];
+                        containers[i].appendChild(informationElements[i]);
+                    }
+                })
+            } else {
+                homePage();
+            }
+
+        </script>
+    </body>
+</html>

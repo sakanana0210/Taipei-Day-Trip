@@ -36,20 +36,20 @@
             </div>
         </div>
         <div id="all-information-containter">
-            <hr class="information-hr">     
+            <hr class="information-hr">
             <div class="contact-information-container"> 
                 <h2 class="information-title information-title-marginbtn20">您的聯絡資訊</h2>
                 <div class="information-item">
                     <label for="name-input" class="form-subtitle">聯絡姓名：</label>
-                    <input id="name-input" type="text">
+                    <input id="name-input" type="text" required>
                 </div>
                 <div class="information-item">
                     <label for="email-input" class="form-subtitle">聯絡信箱：</label>
-                    <input id="email-input" type="text">
+                    <input id="email-input" type="text" required>
                 </div>
                 <div class="information-item">
                     <label for="phone-input" class="form-subtitle">手機號碼：</label>
-                    <input id="phone-input" type="tel" value="" maxlength="10">
+                    <input id="phone-input" type="tel" value="" maxlength="10" required>
                 </div>
                 <div class="attention">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div> 
             </div>
@@ -57,22 +57,22 @@
             <div class="pay-information-container">
                 <h2 class="information-title information-title-marginbtn20">信用卡付款資訊</h2>
                 <div class="information-item">
-                    <label for="card-input" class="form-subtitle">卡片號碼：</label>
-                    <input id="card-input" type="text" placeholder="**** **** **** ****" maxlength="19" required>
+                    <label for="card-number" class="form-subtitle">卡片號碼：</label>
+                    <div class="tpfield" id="card-number"></div>
                 </div>
                 <div class="information-item">
-                    <label for="cardexp-input" class="form-subtitle">過期時間：</label>
-                    <input id="cardexp-input" type="text" placeholder="MM / YY" maxlength="7" required>
+                    <label for="card-expiration-date" class="form-subtitle">過期時間：</label>
+                    <div class="tpfield" id="card-expiration-date"></div>
                 </div>
                 <div class="information-item">
-                    <label for="cardcode-input" class="form-subtitle">驗證密碼：</label>
-                    <input id="cardcode-input" type="password" placeholder="CVV" maxlength="4" required>
+                    <label for="card-ccv" class="form-subtitle">驗證密碼：</label>
+                    <div class="tpfield" id="card-ccv"></div>
                 </div>
             </div>
             <hr class="information-hr">
             <div class="check-container">
                 <div class="check-price"></div>
-                <button>確認訂購並付款</button>
+                <button type="submit" id="submitButton">確認訂購並付款</button>
             </div>
         </div>
     </main>
@@ -81,26 +81,161 @@
     </footer>
     
     <script src="{{ url_for('static', filename='js/member.js') }}"></script>
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
     <script>
-        function cardInput(){
-            let cardInput = document.getElementById("card-input");
-            cardInput.addEventListener("input", (e) => {
-                let cleanedValue = e.target.value.replace(/\D/g, "");
-                let formattedValue = cleanedValue.replace(/(\d{4})(?=\d)/g, "$1 ");
-                e.target.value = formattedValue;
-            })
+        TPDirect.setupSDK(137050, 'app_oiBcoG23ZSD7mn2WzySe81r8PFLe7O6N7dcRHmS3hlhExHOLE0YuOJsuVKND', 'sandbox')
+
+        let fields = {
+            number: {
+                element: '#card-number',
+                placeholder: '**** **** **** ****'
+            },
+            expirationDate: {
+                element: document.getElementById('card-expiration-date'),
+                placeholder: 'MM / YY'
+            },
+            ccv: {
+                element: '#card-ccv',
+                placeholder: 'CVV'
+            }
         }
-        function cardExpInput(){
-            let expInput = document.getElementById("cardexp-input");
-            expInput.addEventListener("input", (e) => {
-                let cleanedValue = e.target.value.replace(/\D/g, "");
-                let formattedValue = cleanedValue.replace(/(\d{2})(?=\d)/g, "$1 / ");
-                e.target.value = formattedValue;
-            })
-        }
-        cardInput();
-        cardExpInput();
+
+        TPDirect.card.setup({
+            fields: fields,
+            styles: {
+                'input': {
+                    'color': 'gray',
+                    'font-size': '16px',
+                    'font-weight': '500',
+                    'color': '#000000'
+                },
+                ':focus': {
+                    'color': 'black',
+                },
+                '.valid': {
+                    'color': 'black'
+                },
+                '.invalid': {
+                    'color': 'red'
+                },
+            },
+            isMaskCreditCardNumber: true,
+            maskCreditCardNumberRange: {
+                beginIndex: 6, 
+                endIndex: 11
+            }
+        })
         
+        TPDirect.card.onUpdate(function (update) {
+            if (update.canGetPrime) {
+                document.getElementById('submitButton').removeAttribute('disabled')
+            } else {
+                document.getElementById('submitButton').setAttribute('disabled', true);
+            }
+        });
+
+        document.querySelector('#submitButton').addEventListener('click', onSubmit)
+        function onSubmit(event) {
+            event.preventDefault();
+            let phoneInput = document.getElementById("phone-input").value;
+            let phoneRegex = /^0\d{9}$/;
+            if (phoneRegex.test(phoneInput) === false) {
+                alert("手機號碼格式錯誤");
+                return;
+            }
+            const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+            if (tappayStatus.canGetPrime === false) {
+                alert('信用卡資訊錯誤，請確認後重試。');
+                return;
+            }
+            TPDirect.card.getPrime((result) => {
+                if (result.status !== 0) {
+                    console.error('get prime error ' + result.msg);
+                    return;
+                }
+                let nameValue = document.getElementById("name-input").value;
+                let emailValue = document.getElementById("email-input").value;
+                let phoneValue = document.getElementById("phone-input").value;
+                fetch("/api/booking", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    },
+                })
+                .then(response => {
+                if (response.status === 200){
+                    return response.json()
+                .then(data => {
+                        let attractionId = data.data.attraction.id;
+                        let attractionName = data.data.attraction.name;
+                        let attractionAddress = data.data.attraction.address;
+                        let attractionImage = data.data.attraction.image;
+                        let bookingPrice = data.data.price
+                        let bookingDate = data.data.date;
+                        let bookingTime = data.data.time;
+                        const requestData = {
+                            "prime": result.card.prime,
+                            "order": {
+                                "price": bookingPrice,
+                                "trip": {
+                                "attraction": {
+                                    "id": attractionId,
+                                    "name": attractionName,
+                                    "address": attractionAddress,
+                                    "image": attractionImage
+                                },
+                                "date": bookingDate,
+                                "time": bookingTime
+                                },
+                                "contact": {
+                                    "name": nameValue,
+                                    "email": emailValue,
+                                    "phone": phoneValue
+                                }
+                            }
+                        };
+                        return requestData;
+                    }
+                )}
+                })
+                .then(requestData => {
+                    fetch("/api/orders", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    .then(response => {
+                        if (response.status === 200){
+                            return response.json()
+                        } else {
+                            alert("")
+                            return
+                        }
+                    })
+                    .then(data => {
+                        let order_number = data.data.number;
+                        let payment_status = data.data.payment.status;
+                        if(payment_status === 0){
+                            fetch("/api/booking", {
+                                method: "DELETE",
+                                headers: {
+                                    "Authorization": `Bearer ${token}`,
+                                },
+                            })
+                            .then(()=> {
+                                window.location.href = `/thankyou?number=${order_number}`;
+                            })
+                        } else {
+                            alert("付款失敗，請重新再試");
+                        }
+                    })
+                })
+            })
+        }
+
         let token = localStorage.getItem("token");
         let nameDiv = document.getElementById("hello_name");
         let nameInput = document.getElementById("name-input");
