@@ -198,6 +198,7 @@ footer {
 
     .image-container {
         width: calc(100% - 10px);
+        height: 300px;
         margin-bottom: 30px;
     }
 
