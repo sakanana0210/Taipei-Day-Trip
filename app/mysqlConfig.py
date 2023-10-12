@@ -1,11 +1,14 @@
 import mysql.connector
 import mysql.connector.pooling
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 dbconfig = {
-    "user": "root", 
-    "password": "ji3cl31;4", 
-    "host": "127.0.0.1", 
-    "database": "taipei_day_trip",
+    "user": os.getenv("DB_USER"), 
+    "password": os.getenv("DB_PASSWORD"),
+    "host": os.getenv("DB_HOST"), 
+    "database": os.getenv("DB_DATABASE"),
     "charset": "utf8"
 }
 

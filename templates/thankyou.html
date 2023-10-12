@@ -6,10 +6,12 @@
     <title>台北一日遊</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='thankyou.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loading.css') }}">
 </head>
     <body>
         <header>
             {% include "signin_component.html" %}
+            {% include "loading_component.html" %}
             <div class="navbar-container">
                 <div class="navbar">
                     <h2 onclick="homePage()">台北一日遊</h2>
@@ -58,6 +60,7 @@
             let urlParams = new URLSearchParams(queryString);
             let orderNumber = urlParams.get("number");
             let token = localStorage.getItem("token");
+            const loadingOverlay = document.querySelector(".loading-component");
             if(token){
                 fetch( `/api/order/${orderNumber}`, {
                     method: "GET",
@@ -74,6 +77,9 @@
                     } 
                 })
                 .then(data => {
+                    setTimeout(() => {
+                            loadingOverlay.style.display = "none";
+                    }, 500)
                     let dataImage = data["data"]["trip"]["attraction"]["image"];
                     let dataNumber = data["data"]["number"];
                     let dataName = data["data"]["trip"]["attraction"]["name"];
