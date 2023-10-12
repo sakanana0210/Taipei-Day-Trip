@@ -9,11 +9,9 @@ conn_pool = mysqlConfig.conn_pool
 verify_jwt = jwt.verify_jwt
 upload_avatar_bp = Blueprint("upload_avatar", __name__)
 
-
 def allowed_file(filename):
     allowed_extensions = current_app.config["ALLOWED_EXTENSIONS"]
     return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_extensions
-
 
 @upload_avatar_bp.route("/upload", methods=["POST"])
 def upload_avatar():
@@ -31,13 +29,17 @@ def upload_avatar():
         cnx = conn_pool.get_connection()
         cursor = cnx.cursor()
 
+        print("a")
         if "file" not in request.files:
+            print("b")
             raise Exception
         
         file = request.files["file"]
         if file.filename == "":
+            print("c")
             raise Exception
         
+        print("d")
         if file and allowed_file(file.filename):
             query = "SELECT avatar_url FROM member WHERE id = %s"
             cursor.execute(query, (user_id, ))
@@ -45,8 +47,8 @@ def upload_avatar():
             old_avatar_url = result[0]
             if old_avatar_url is not None and old_avatar_url != "":
                 old_avatar_path = os.path.join(current_app.config["UPLOAD_FOLDER"], os.path.basename(old_avatar_url))
-            if os.path.exists(old_avatar_path):
-                os.remove(old_avatar_path)
+                if os.path.exists(old_avatar_path):
+                    os.remove(old_avatar_path)
             timestamp = int(time.time()) 
             base_filename, file_extension = os.path.splitext(file.filename)
             unique_filename = f"{base_filename}_{timestamp}{file_extension}"
