@@ -3,13 +3,11 @@
     margin: 0;
     padding: 0;
     font-family: Noto Sans TC, sans-serif;
-    color: #666666;
 }
 
 #data-icon {
     width: 10px;
     height: 10px;
-    background-color: red;
 }
 
 header {
@@ -110,6 +108,7 @@ hr {
     max-width: 1200px;
     width: 90%;
     margin: 40px auto;
+    color: #666666;
 }
 
 #row-top {
@@ -262,6 +261,7 @@ hr {
     padding-bottom: 8px;
     border-radius: 5px;
     background-color: #E8E8E8;
+    color: #666666;
 }
 
 .booking-title {

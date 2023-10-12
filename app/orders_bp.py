@@ -1,8 +1,10 @@
 from flask import *
 from app import mysqlConfig,jwt
 import mysql
+import mysql.connector
 from datetime import datetime
 import requests
+import re
 
 dbconfig = mysqlConfig.dbconfig
 conn_pool = mysqlConfig.conn_pool
@@ -34,8 +36,13 @@ def orders():
 		booking_time = request_data["order"]["trip"]["time"]
 		price = request_data["order"]["price"]
 		phone = request_data["order"]["contact"]["phone"]
+		email_pattern = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]{2,}$") 
+		phone_pattern = re.compile(r"^0\d{9}$")
+		name_pattern = re.compile(r'^[^\s]+$')
 		name = request_data["order"]["contact"]["name"]
 		email = request_data["order"]["contact"]["email"]
+		if not (email_pattern.match(email) and phone_pattern.match(phone) and name_pattern.match(name) and prime is not None):
+			raise mysql.connector.Error
 		query = "INSERT INTO orders (order_number, user_id, attraction_id, date, time, price, pay_status, contact_email, contact_name, contact_phone) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 		cursor.execute(query,(order_number, user_id, attraction_id, booknig_date_formateed, booking_time, price, -1, email, name, phone))
 		cnx.commit()

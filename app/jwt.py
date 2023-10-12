@@ -1,8 +1,11 @@
 import jwt
 from datetime import datetime, timedelta
 import json
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-secret_key = "Ca6478B46s551BE1DD067Dds8CB4D71CD9CCBE2E4571047DCE18669B19a257c3C"
+secret_key = os.getenv("SECRET_KEY")
 
 def create_jwt(user_id, user_name, user_email):
 	payload = {"id": user_id,

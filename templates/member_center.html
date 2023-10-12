@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title>台北一日遊</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='member_center.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loading.css') }}">
+</head>
+<body>
+    <header>
+        {% include "signin_component.html" %}
+        {% include "loading_component.html" %}
+        <div class="navbar-container">
+            <div class="navbar">
+                <h2 onclick="homePage()">台北一日遊</h2>
+                <div class="navbar-lists">
+                    <button class="navbar-list" id="booking">預定行程</button>
+                    <button class="navbar-list" id="sign-up-in">登入/註冊</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <hr id="hr-top">
+    <main>
+
+        <div class="member-center-container">
+            <h1 class="information-title">會員中心</h1>
+            <div class="user-icon">
+                <span class="subtitle">大頭貼：</span><img class="avatar-img">
+                <form method="POST" enctype="multipart/form-data" onsubmit="return submitUpload()">
+                    <input type="file" id="fileInput" name="file"><br/>
+                    <button class="avatar-btn" type="submit">上傳頭像(1MB以內)</button>
+                </form>
+            </div>
+            <div class="user-text-information">
+                <div class="user-name">
+                    <span class="subtitle">姓名：</span><span id="name-value" class="information-content"></span>
+                </div>            
+                <div class="user-email">
+                    <span class="subtitle">信箱：</span><span id="email-value" class="information-content"></span>
+                </div>            
+                <div class="user-password">
+                    <span class="subtitle">密碼：</span><span class="information-content">*********</span>
+                </div>
+                <div class="user-phone">
+                    <span class="subtitle">手機號碼：</span><span  id="phone-value" class="information-content"></span>
+                </div>
+                <button onclick="return changeInformation()">更改會員資料</button>
+            </div>
+        </div>
+        <hr class="information-hr">
+        <div class="member-orders-container">
+            <h1 class="information-title">訂單紀錄</h1>
+            <table class="order-lists">
+            </table>
+        </div>
+        <hr class="information-hr">
+        <div>
+            <button id="signout-btn">登出系統</button>
+        </div>
+    </main>
+    <footer>
+        <p class="footer-text">COPYRIGHT © 2021 台北一日遊</p>
+    </footer>
+    <script src="{{ url_for('static', filename='js/member.js') }}"></script>
+    <script>
+        function changeInformation(){
+            const userInformationContainer = document.querySelector(".user-text-information");
+            userInformationContainer.innerHTML = "";
+            const newForm = document.createElement("form");
+            newForm.className = "change-information-form";
+            newForm.id = "change-information-form";
+            newForm.innerHTML = `
+                <div class="user-name">
+                    <span class="subtitle">姓名：</span><input id="name-input" class="information-content">
+                </div>            
+                <div class="user-email">
+                    <span class="subtitle">信箱：</span><input id="email-input" class="information-content">
+                </div>            
+                <div class="user-password-new">
+                    <span class="subtitle">新密碼：</span><input id="new-password-input" class="information-content" type="password">
+                </div>
+                <div class="user-phone">
+                    <span class="subtitle">手機號碼：</span><input id="phone-input" class="information-content">
+                </div>
+                <div class="user-password-old">
+                    <span class="subtitle">*請輸入舊密碼：</span><input id="old-password-input" class="information-content" type="password" required>
+                </div>
+                <button>確認修改</button>
+            `;
+            userInformationContainer.appendChild(newForm);
+            const informationForm = document.getElementById("change-information-form");
+            informationForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                submitInformationChange();
+            });
+        }
+
+        function submitInformationChange(){
+            let name=document.querySelector("input[id='name-input']");
+            let email=document.querySelector("input[id='email-input']");
+            let newPassword=document.querySelector("input[id='new-password-input']");
+            let phone=document.querySelector("input[id='phone-input']");
+            let oldPassword=document.querySelector("input[id='old-password-input']");
+            let formData = {
+                "name": name.value,
+                "email": email.value,
+                "new_password": newPassword.value,
+                "phone": phone.value,
+                "old_password": oldPassword.value
+            };
+            let jsonData = JSON.stringify(formData);
+            fetch("/api/user_change", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("修改成功！請重新登入");
+                    handleClickSignout();
+            } else if (response.status === 403) {
+                response.json().then(data => {
+                    const errorMessage = data.message;
+                    alert(errorMessage);
+                });
+            } else if (response.status === 500) {
+                alert("伺服器內部錯誤，請稍後重試");
+            }
+        })
+        }
+
+
+        function submitUpload(){
+            const formData = new FormData();
+            fileInput = document.getElementById("fileInput");
+            formData.append("file", fileInput.files[0]);
+            event.preventDefault();
+            fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("上傳成功！");
+                    location.reload();
+                } else {
+                    alert("上傳失敗，請重新上傳");
+                }
+            })
+        }
+        let token = localStorage.getItem("token");
+        if(token){
+            const loadingOverlay = document.querySelector(".loading-component");
+            loadingOverlay.style.display = "flex";
+            setTimeout(() => {
+                loadingOverlay.style.display = "none";
+            }, 5000)
+            fetch("/api/user/auth", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json()
+                    .then(data =>{
+                        const nameValue = document.getElementById("name-value");
+                        const emailValue = document.getElementById("email-value");
+                        if (data.data == null) {
+                            window.location.href = "/";
+                        } else {
+                            nameValue.innerHTML = data.data.name;
+                            emailValue.innerHTML =data.data.email;
+                        }
+                        loadingOverlay.style.display = "none";
+                    });
+                }
+            })
+
+            fetch("/api/get_avatar", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json()
+                    .then(data =>{
+                        const phoneValue = document.getElementById("phone-value");
+                        const imgAvatar = document.querySelector(".avatar-img");
+                        if (data.data == null) {
+                            window.location.href = "/";
+                        } else {
+                            if(data.data.phone == null || data.data.phone == ""){
+                                phoneValue.innerHTML = "未填寫"
+                            } else {
+                                phoneNumber = data.data.phone;
+                                const firstPart = phoneNumber.substring(0, 4);
+                                const middlePart = "***";
+                                const lastPart = phoneNumber.substring(phoneNumber.length - 3);
+                                const formattedPhoneNumber = `${firstPart} ${middlePart} ${lastPart}`;
+                                phoneValue.innerHTML = formattedPhoneNumber;
+                            }
+                            if(data.data.avatar_url == null || data.data.avatar_url == ""){
+                                imgAvatar.src = "../static/img/avata.png";
+                            } else {
+                                imgAvatar.src = data.data.avatar_url;
+                                
+                            }
+                        }
+                    });
+            }})
+
+            fetch("/api/user_orders", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json()
+                    .then(data =>{
+                        if (data.data == null) {
+                            let orderList = document.querySelector(".order-lists");
+                            orderList.innerHTML =  "";
+                            let noOrderCell = document.createElement("div");
+                            noOrderCell.className = "no-order-list"
+                            noOrderCell.textContent = "目前無訂單紀錄。"
+                            orderList.appendChild(noOrderCell);
+                        } else {
+                            let orderList = document.querySelector(".order-lists");
+                            const tableHr = `<tr class="order-list-bar">
+                                            <th>訂單編號</th>
+                                            <th>下單日期</th>
+                                            <th>景點名稱</th>
+                                            <th>出發日期</th>
+                                            <th>出發時間</th>
+                                            <th>總金額</th>
+                                            <th>訂單進度</th>
+                                            </tr>`
+                            orderList.innerHTML = tableHr;
+                            for (let i=0; i < data["data"].length; i++){
+                                
+                                let orderData = data["data"][i];
+                                console.log(orderData);
+                                let row = document.createElement("tr");
+                                row.className = "order-list";
+
+                                let orderNumberCell = document.createElement("td");
+                                let orderNumberLink = document.createElement("a");
+                                orderNumberLink.href = `/thankyou?number=/${orderData["number"]}`;
+                                orderNumberLink.textContent = orderData["number"];
+                                orderNumberLink.className = "order-link";
+                                orderNumberCell.appendChild(orderNumberLink);
+                                row.appendChild(orderNumberCell);
+
+                                let createdAtCell = document.createElement("td");
+                                createdAtCell.textContent = orderData["order_time"];
+                                row.appendChild(createdAtCell);
+
+                                let attractionNameCell = document.createElement("td");
+                                attractionNameCell.textContent = orderData["attraction_name"];
+                                row.appendChild(attractionNameCell);
+
+                                let dateCell = document.createElement("td");
+                                dateCell.textContent = orderData["schedule_date"];
+                                row.appendChild(dateCell);
+
+                                let timeCell = document.createElement("td");
+                                if(orderData["schedule_time"] === "morning"){
+                                    orderTime = "上午";
+                                }else {
+                                    orderTime = "下午";
+                                }
+                                timeCell.textContent = orderTime;
+                                row.appendChild(timeCell);
+
+                                let priceCell = document.createElement("td");
+                                priceCell.textContent = orderData["price"];
+                                row.appendChild(priceCell);
+
+                                let payStatusCell = document.createElement("td");
+                                if(orderData["status"] == -1){
+                                    payStatus = "付款失敗";
+                                }else {
+                                    payStatus = "付款完成";
+                                }
+                                payStatusCell.textContent = payStatus;
+                                row.appendChild(payStatusCell);
+                                
+                                orderList.append(row);
+                            }
+                        }
+                    });
+                }})
+        }
+        else{
+            window.location.href = "/";
+        }
+
+        const signoutBtn = document.getElementById("signout-btn");
+        signoutBtn.addEventListener("click", handleClickSignout);
+    </script>
+</body>
+</html>

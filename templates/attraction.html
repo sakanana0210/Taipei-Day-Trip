@@ -6,10 +6,12 @@
     <title>台北一日遊</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='attraction.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loading.css') }}">
 </head>
 <body>
     <header>
         {% include "signin_component.html" %}
+        {% include "loading_component.html" %}
         <div class="navbar-container">
             <div class="navbar">
                 <h2 onclick="homePage()">台北一日遊</h2>
@@ -97,6 +99,7 @@
         // fetch attraction id
         const currentURL = window.location.href;
         let attractionId = currentURL.split("attraction/")[1];
+        const loadingOverlay = document.querySelector(".loading-component");
         attractionId = attractionId.match(/\d+/)[0];
         url = "/api/attraction/" + attractionId;
         fetch(url)
@@ -104,6 +107,9 @@
             return response.json();
         })
         .then(data => {
+            setTimeout(() => {
+                loadingOverlay.style.display = "none";
+            }, 1000)
             let name = data["data"]["name"];
             let category = data["data"]["category"];
             let mrt = data["data"]["mrt"];
@@ -243,6 +249,20 @@
 
         function submitBooking(){
             event.preventDefault();
+            let selectedDate = new Date(document.getElementById("date-input").value);
+            let today = new Date();
+            let currentYear = today.getFullYear();
+            let currentMonth = today.getMonth() + 1;
+            let currentDay = today.getDate();
+            let selectedYear = selectedDate.getFullYear();
+            let selectedMonth = selectedDate.getMonth() + 1;
+            let selectedDay = selectedDate.getDate();
+            if (selectedYear < currentYear || 
+                (selectedYear === currentYear && selectedMonth < currentMonth) || 
+                (selectedYear === currentYear && selectedMonth === currentMonth && selectedDay < currentDay)) {
+                alert("不可選擇過去的日期，請重新選擇");
+                return false;
+            }
             let bookingDate = document.getElementById("date-input").value;
             let morningTime = document.getElementById("morning-time");
             let afternoonTime = document.getElementById("afternoon-time");
