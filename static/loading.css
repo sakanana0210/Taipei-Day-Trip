@@ -1,0 +1,107 @@
+.loading-component {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(0,0,0,0.3);
+    position: fixed;
+    z-index: 2000;
+}
+
+.loader-container {
+    display: flex;
+    background-color: #fff;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.1);
+    padding: 50px;
+    border-radius: 5px;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 10px solid rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 50%;
+    border-top: 10px solid #53caf5; 
+    animation: spinAnimation 1.4s ease infinite;
+}
+
+.loader-text {
+    margin-top: -8px;
+    margin-left: 10px;
+    display: flex;
+    font-family: "Helvetica", "Arial","LiHei Pro", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #43b5de;
+}
+
+@keyframes spinAnimation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes scaleAnimation {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    30% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+.loader-text > div{
+    animation: scaleAnimation 2.1s ease infinite;
+    margin: 3px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-text > div:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.loader-text > div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader-text > div:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.loader-text > div:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+.loader-text > div:nth-child(5) {
+    animation-delay: 0.8s;
+}
+
+.loader-text > div:nth-child(6) {
+    animation-delay: 1.0s;
+}
+
+.loader-text > div:nth-child(7) {
+    animation-delay: 1.2s;
+} 
+
+.loader-text > div:nth-child(8) {
+    animation-delay: 1.4s;
+} 
+
+.loader-text > div:nth-child(9) {
+    animation-delay: 1.6s;
+} 
+
+.loader-text > div:nth-child(10) {
+    animation-delay: 1.8s;
+} 

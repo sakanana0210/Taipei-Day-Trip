@@ -73,6 +73,18 @@ def user_auth():
 			data = request.get_json()
 			email = data["email"]
 			password = data["password"]
+			if not check_email(email):
+				error_message = "email格式錯誤"
+				new_data = {"error": True, "message": error_message}
+				json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+				response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
+				return response
+			elif not check_password(password):
+				error_message = "密碼格式錯誤 (需包含字母與數字，且長度在8到20之間)"
+				new_data = {"error": True, "message": error_message}
+				json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+				response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
+				return response
 			cursor.execute("SELECT id, name, email FROM member WHERE BINARY email = %s and password = %s ", (email,password))
 			user_matched = cursor.fetchone()
 			if (user_matched):

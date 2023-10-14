@@ -217,9 +217,9 @@ function getSigninToken() {
     })
     .then(() => {
         signinState = true;
-        singinSingout.innerHTML = "登出系統";
+        singinSingout.innerHTML = "會員中心";
         btnToSingupSingin.removeEventListener("click", handleClickSignin);
-        btnToSingupSingin.addEventListener("click", handleClickSignout);
+        btnToSingupSingin.addEventListener("click", handleClickMemberCenter);
     })
     } else {
         return;
@@ -232,6 +232,10 @@ function handleClickSignout(){
     setTimeout(() => {
         location.reload();
     }, 20);
+}
+
+function handleClickMemberCenter(){
+    window.location.href = "/user";
 }
 
 getSigninToken();

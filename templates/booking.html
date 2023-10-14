@@ -6,10 +6,12 @@
     <title>台北一日遊</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signin.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='booking.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loading.css') }}">
 </head>
 <body>
     <header>
         {% include "signin_component.html" %}
+        {% include "loading_component.html" %}
         <div class="navbar-container">
             <div class="navbar">
                 <h2 onclick="homePage()">台北一日遊</h2>
@@ -125,18 +127,11 @@
                 endIndex: 11
             }
         })
-        
-        TPDirect.card.onUpdate(function (update) {
-            if (update.canGetPrime) {
-                document.getElementById('submitButton').removeAttribute('disabled')
-            } else {
-                document.getElementById('submitButton').setAttribute('disabled', true);
-            }
-        });
 
         document.querySelector('#submitButton').addEventListener('click', onSubmit)
         function onSubmit(event) {
             event.preventDefault();
+            const loadingOverlay = document.querySelector(".loading-component");
             let phoneInput = document.getElementById("phone-input").value;
             let phoneRegex = /^0\d{9}$/;
             if (phoneRegex.test(phoneInput) === false) {
@@ -145,7 +140,7 @@
             }
             const tappayStatus = TPDirect.card.getTappayFieldsStatus();
             if (tappayStatus.canGetPrime === false) {
-                alert('信用卡資訊錯誤，請確認後重試。');
+                alert("信用卡資訊錯誤，請確認後重試。");
                 return;
             }
             TPDirect.card.getPrime((result) => {
@@ -164,6 +159,10 @@
                 })
                 .then(response => {
                 if (response.status === 200){
+                    loadingOverlay.style.display = "flex";
+                    setTimeout(() => {
+                        loadingOverlay.style.display = "none";
+                    }, 500)
                     return response.json()
                 .then(data => {
                         let attractionId = data.data.attraction.id;
@@ -211,7 +210,7 @@
                         if (response.status === 200){
                             return response.json()
                         } else {
-                            alert("")
+                            alert("訂購失敗，請重新再試");
                             return
                         }
                     })
@@ -226,6 +225,7 @@
                                 },
                             })
                             .then(()=> {
+                                alert("訂購完成，將跳轉至訂單頁");
                                 window.location.href = `/thankyou?number=${order_number}`;
                             })
                         } else {
@@ -240,6 +240,10 @@
         let nameDiv = document.getElementById("hello_name");
         let nameInput = document.getElementById("name-input");
         let emailInput = document.getElementById("email-input");
+        const loadingOverlay = document.querySelector(".loading-component");
+        setTimeout(() => {
+            loadingOverlay.style.display = "none";
+        }, 500)
         if(token){
             fetch("/api/user/auth", {
                 method: "GET",
@@ -249,7 +253,7 @@
             })
             .then(response => {
                 if (response.status === 200) {
-                    return response.json().then(data => {
+                    return response.json().then(data =>{
                         if (data.data == null) {
                             window.location.href = "/";
                         } else {
@@ -309,7 +313,7 @@
         }
         let deleteIcon = document.querySelector(".delete-icon");
         deleteIcon.addEventListener("click", () => {
-            fetch("/api/booking", {
+            fetch("/api/upload", {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,

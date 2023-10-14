@@ -1,5 +1,6 @@
 from flask import *
 from app import mysqlConfig,jwt
+import re
 dbconfig = mysqlConfig.dbconfig
 conn_pool = mysqlConfig.conn_pool
 create_jwt = jwt.create_jwt
@@ -27,7 +28,8 @@ def api_booking():
 			booknig_date = date_string.replace("-", "")
 			booknig_attraction_id = booking_data["attractionId"]
 			booknig_time = booking_data["time"]
-			booking_price = booking_data["price"]
+			booking_price = str(booking_data["price"])
+			date_pattern = re.compile(r"^\d{8}$")
 			for key, value in booking_data.items():
 				if value == "" or value is None:
 					error_message = "建立失敗，輸入不正確或其他原因"
@@ -35,6 +37,12 @@ def api_booking():
 					json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
 					response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
 					return response
+			if not (date_pattern.match(booknig_date) and (booknig_time == "morning" or booknig_time == "afternoon") and (booking_price == "2500" or booking_price == "2000")):
+				error_message = "建立失敗，輸入不正確或其他原因"
+				new_data = {"error": True, "message": error_message}
+				json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
+				response = Response(json_data, status=400, content_type="application/json; charset=utf-8")
+				return response
 			query = "INSERT INTO booking (user_id, attraction_id, date, time, price) VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE user_id = VALUES(user_id),  attraction_id = VALUES(attraction_id), date = VALUES(date), time = VALUES(time), price = VALUES(price)"
 			cursor.execute(query,(user_id, booknig_attraction_id, booknig_date, booknig_time, booking_price ))
 			cnx.commit()
