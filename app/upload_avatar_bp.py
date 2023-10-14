@@ -28,18 +28,13 @@ def upload_avatar():
         user_id = user_info_dict["data"]["id"]
         cnx = conn_pool.get_connection()
         cursor = cnx.cursor()
-
-        print("a")
         if "file" not in request.files:
-            print("b")
             raise Exception
         
         file = request.files["file"]
         if file.filename == "":
-            print("c")
             raise Exception
         
-        print("d")
         if file and allowed_file(file.filename):
             query = "SELECT avatar_url FROM member WHERE id = %s"
             cursor.execute(query, (user_id, ))

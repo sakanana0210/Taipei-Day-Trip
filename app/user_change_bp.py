@@ -38,9 +38,9 @@ def user_change():
         new_password = data["new_password"]
         phone = data["phone"]
         old_password = data["old_password"]
-        cursor.execute("SELECT id FROM member WHERE BINARY id = %s and password = %s", (user_id, old_password))
-        password_correct = cursor.fetchone()
-        if not password_correct:
+        cursor.execute("SELECT name, email, phone FROM member WHERE BINARY id = %s and password = %s", (user_id, old_password))
+        result = cursor.fetchone()
+        if not result:
             error_message = "原密碼錯誤，請重新嘗試"
             new_data = {"error": True, "message": error_message}
             json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
@@ -57,12 +57,12 @@ def user_change():
             cursor.execute(query, (new_password, user_id))
             cnx.commit()
 
-        if name is not None and name != "":
+        if name is not None and name != "" and name != result[0]:
             query = "UPDATE member SET name = %s WHERE id = %s"
             cursor.execute(query, (name, user_id))
             cnx.commit()
 
-        if phone is not None and phone != "" and not check_phone(phone):
+        if phone is not None and phone != "" and not check_phone(phone) and phone != result[2]:
             error_message = "電話號碼格式錯誤(09開頭，共10碼)"
             new_data = {"error": True, "message": error_message}
             json_data = json.dumps(new_data, ensure_ascii=False, sort_keys=False).encode("utf-8")
@@ -73,7 +73,7 @@ def user_change():
             cursor.execute(query, (phone, user_id))
             cnx.commit()
 
-        if email is not None and email != "":
+        if email is not None and email != "" and email != result[1]:
             query = "UPDATE member SET email = %s WHERE id = %s"
             cursor.execute(query, (email, user_id))
             cnx.commit()

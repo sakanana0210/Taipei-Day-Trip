@@ -91,6 +91,51 @@
                 <button>確認修改</button>
             `;
             userInformationContainer.appendChild(newForm);
+            fetch("/api/user/auth", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json()
+                    .then(data =>{
+                        const nameInput = document.getElementById("name-input");
+                        const emailInput = document.getElementById("email-input");
+                        if (data.data == null) {
+                            window.location.href = "/";
+                        } else {
+                            nameInput.value = data.data.name;
+                            emailInput.value = data.data.email;
+                        }
+                    });
+                }
+            })
+
+            fetch("/api/get_avatar", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json()
+                    .then(data =>{
+                        const phoneInput = document.getElementById("phone-input");
+                        if (data.data == null) {
+                            window.location.href = "/";
+                        } else {
+                            if(data.data.phone == null || data.data.phone == ""){
+                                phoneInput.value = ""
+                            } else {
+                                phoneNumber = data.data.phone;
+                                phoneInput.value = phoneNumber;
+                            }
+                        }
+                    });
+            }})
             const informationForm = document.getElementById("change-information-form");
             informationForm.addEventListener("submit", function(e) {
                 e.preventDefault();
