@@ -6,8 +6,8 @@
 
  **Website：[台北一日遊](http://3.27.101.46:3000/)**
 
- **Test account and password：**
-| Account | Password |
+ **測試帳密：**
+| 帳號 | 密碼 |
 |:----:|:----:|
 | `aabbcc@gmail.com` | `aabbcc123` |
 
@@ -24,7 +24,9 @@
   
   
 **(3)  購物車 (串接TapPay金流)**  
-  
+|測試卡號 | 日期 | 後三碼 |
+|:----:|:----:|:----:|
+| `4242 4242 4242 4242` | `01/30` | `123` |
 ![booking](https://raw.githubusercontent.com/sakanana0210/Taipei-Day-Trip/main/static/img/readmeImg/booking.jpg)
     
    
