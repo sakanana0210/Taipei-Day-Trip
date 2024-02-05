@@ -313,7 +313,7 @@
         }
         let deleteIcon = document.querySelector(".delete-icon");
         deleteIcon.addEventListener("click", () => {
-            fetch("/api/upload", {
+            fetch("/api/booking", {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,
